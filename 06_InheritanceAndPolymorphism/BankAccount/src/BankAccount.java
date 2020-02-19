@@ -17,7 +17,7 @@ public class BankAccount {
     }
 
     public boolean getCashOut(float cash) {
-        if(balancePositive(cash)) {
+        if(isBalancePositive(cash)) {
             cashCount -= cash;
             System.out.printf("Выведено %.2f, Остаток %.2f %n", cash, cashCount);
             return true;
@@ -28,11 +28,11 @@ public class BankAccount {
             return false;
         }
     }
-    public boolean balancePositive(float cash) {
+    public boolean isBalancePositive(float cash) {
         return cashCount >= cash;
     }
     public void transferTo (BankAccount toBankCard, float cash) {
-        if(BankAccount.this.getCashOut(cash)) {
+        if(getCashOut(cash)) {
             toBankCard.putCashCount(cash);
         }
     }
