@@ -13,7 +13,19 @@ public class Main
     public static void main(String[] args)
     {
         ArrayList<Employee> staff = loadStaffFromFile();
-
+        Collections.sort(staff, (o1,o2) -> {
+            int result;
+            if (o1.getSalary().compareTo(o2.getSalary()) < 0) {
+                result = -1;
+            } else result = 1;
+            if (o1.getSalary().compareTo(o2.getSalary()) == 0) {
+                result = o1.getName().compareTo(o2.getName());
+            }
+            return result;
+        });
+        for(Employee employee : staff) {
+            System.out.println(employee);
+        }
 
     }
 
