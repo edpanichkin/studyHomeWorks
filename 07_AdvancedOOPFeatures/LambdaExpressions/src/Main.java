@@ -1,32 +1,24 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Main
 {
     private static String staffFile = "data/staff.txt";
     private static String dateFormat = "dd.MM.yyyy";
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         ArrayList<Employee> staff = loadStaffFromFile();
-        Collections.sort(staff, (o1,o2) -> {
-            int result;
-            if (o1.getSalary().compareTo(o2.getSalary()) < 0) {
-                result = -1;
-            } else result = 1;
-            if (o1.getSalary().compareTo(o2.getSalary()) == 0) {
-                result = o1.getName().compareTo(o2.getName());
-            }
-            return result;
-        });
-        for(Employee employee : staff) {
-            System.out.println(employee);
-        }
 
+//Задание 7.2
+        System.out.println("____________Задание 7.2________________");
+        staff.stream().sorted(Main::compare).forEach(System.out::println);
+
+//Задание 7.8
+        System.out.println("____________Задание 7.8________________");
+       staff.stream().filter(employee -> employee.getWorkStart().getYear() >= (2017-1990))
+               .max(Comparator.comparing(Employee::getSalary)).ifPresent(System.out::println);
     }
 
     private static ArrayList<Employee> loadStaffFromFile()
@@ -53,5 +45,16 @@ public class Main
             ex.printStackTrace();
         }
         return staff;
+    }
+//для Лямбды, написанная сортировка по зп и алфавиту
+    public static int compare(Employee o1, Employee o2) {
+        int result;
+        if (o1.getSalary().compareTo(o2.getSalary()) < 0) {
+            result = -1;
+        } else result = 1;
+        if (o1.getSalary().compareTo(o2.getSalary()) == 0) {
+            result = o1.getName().compareTo(o2.getName());
+        }
+        return result;
     }
 }
