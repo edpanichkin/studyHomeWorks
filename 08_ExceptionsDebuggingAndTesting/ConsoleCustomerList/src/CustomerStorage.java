@@ -1,8 +1,4 @@
-import org.w3c.dom.ls.LSOutput;
-
-import javax.sound.midi.Soundbank;
 import java.util.HashMap;
-import java.util.regex.Matcher;
 
 public class CustomerStorage
 {
@@ -13,25 +9,19 @@ public class CustomerStorage
         storage = new HashMap<>();
     }
 
-    public void addCustomer(String data)
+    public void addCustomer(String data) throws Exception
     {
         String[] components = data.split("\\s+");
         String regexEmail = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
-        String regexPhone = "\\+\\d+";
+        String regexPhone = "\\+\\d{11}";
         String name = components[0] + " " + components[1];
-        try {
-            if (!components[2].matches(regexEmail)) {
-                System.out.println("Regex error - e-mail. Введите vvv.v@vvv.ru");
-                throw new Exception();
-            }
-            if (!components[3].matches(regexPhone)) {
-                System.out.println("Regex error - phone. Введите +79215637722");
-                throw new Exception();
-            }
-            storage.put(name, new Customer(name, components[3], components[2]));
-        } catch (Exception e) {
-                System.out.println("Введите верные данные");
+        if (!components[2].matches(regexEmail)) {
+            throw new Exception("Regex error - e-mail. Введите vvv.v@vvv.ru");
         }
+        if (!components[3].matches(regexPhone)) {
+            throw new Exception("Regex error - phone. Введите +79215637722");
+        }
+        storage.put(name, new Customer(name, components[3], components[2]));
     }
 
     public void listCustomers()
@@ -41,16 +31,10 @@ public class CustomerStorage
 
     public void removeCustomer(String name) throws Exception
     {
-        try {
-            if (!storage.containsKey(name)) {
-                throw new Exception();
-            }
-            storage.remove(name);
+        if (!storage.containsKey(name)) {
+            throw new Exception("Нет такого Покупателя, посмотрите коммандой list");
         }
-        catch (Exception e) {
-            System.out.println("Нет такого Покупателя, посмотрите коммандой list");
-        }
-
+        storage.remove(name);
     }
 
     public int getCount()

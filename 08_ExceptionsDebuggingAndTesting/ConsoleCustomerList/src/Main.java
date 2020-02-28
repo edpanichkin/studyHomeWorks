@@ -1,7 +1,4 @@
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class Main
 {
@@ -13,14 +10,14 @@ public class Main
             commandExamples;
     private static String helpText = "Command examples:\n" + commandExamples;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         CustomerStorage executor = new CustomerStorage();
         for(;;)
         {
             String command = scanner.nextLine();
-            String[] tokens = command.split("\\s+", 2);
             try {
+                String[] tokens = command.split("\\s+", 2);
                 if (tokens[0].equals("add")) {
                     executor.addCustomer(tokens[1]);
                 } else if (tokens[0].equals("list")) {
@@ -37,6 +34,8 @@ public class Main
             } catch (ArrayIndexOutOfBoundsException ex) {
                 System.out.println("Ощибка ввода нового покупателя, пример:");
                 System.out.println(addCommand);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
             }
         }
     }
