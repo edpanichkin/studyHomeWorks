@@ -1,18 +1,19 @@
 package companyClasses;
 
-public class TopManager extends CompanyEmployee implements Employee {
+public class TopManager extends Employee {
+    final int OKLAD_FIX = 150000;
+    final int OKLAD_RND = 30000;
+    final int WHEN_BONUS = 10000000;
+    final double BONUS_COEFF = 1.5;
+
     public TopManager() {
-    super();
-    this.setSalary((int) (10000.0 + 5000.0 * Math.random()));
-    this.setEmployeeType(EmployeeType.TOPMANAGER);
-}
-    @Override
-    public int getMonthSalary() {
-        int monthSalary = this.getSalary();
-        if (super.getIncome() >= 10000000){
-            this.setSalary(this.getSalary()+ (int)(1.5 * this.getSalary()));
-            monthSalary = this.getSalary();
+        super();
+        this.setSalary((int) (OKLAD_FIX + OKLAD_RND * Math.random()));
+        this.setEmployeeType(Employee.Type.TOPMANAGER);
+        if (this.income >= WHEN_BONUS) {
+            this.setMonthSalary(this.getSalary() + (int) (BONUS_COEFF * this.getSalary()));
+        } else {
+            this.setMonthSalary(this.getSalary());
         }
-        return monthSalary;
     }
 }
