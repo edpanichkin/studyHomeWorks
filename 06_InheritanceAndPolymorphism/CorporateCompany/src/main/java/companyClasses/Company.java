@@ -1,19 +1,23 @@
 package companyClasses;
 
 import java.util.*;
+import static companyClasses.Employee.Type.*;
 
 public class Company {
+    public static List<Employee> employees = new ArrayList<>();
 
-    private static Integer companyIncome;
-    public List<Employee> employees = new ArrayList<Employee>();
-
-    public Company(Integer companyIncome) {
-        Company.companyIncome = companyIncome;
+    public Company() {
     }
     public static Integer getCompanyIncome() {
-        return companyIncome;
+        return employees.stream().mapToInt(e -> e.getSales()).sum();
     }
-
+    public int getWageFund() {
+        return employees.stream().mapToInt(e -> e.getMonthSalary()).sum();
+    }
+    public void getProfit() {
+        System.out.printf("Доход с продаж: %d, ФОТ: %d \n Прибыль: %d\n\n",
+                getCompanyIncome(), getWageFund(), getCompanyIncome() - getWageFund());
+    }
     //Блок Приема/Увольнения
     public List<Employee> hire(Employee.Type employeeType) {
         switch (employeeType) {
@@ -72,12 +76,23 @@ public class Company {
                 .forEach(System.out::println);
     }
     public void printCompany() {
-        employees.stream()
-                .forEach(f -> System.out.println(f.getMonthSalary() + " руб / Должность: " + f.getEmployeeType()));
-        System.out.print("ФОТ: ");
-        employees.stream()
-                .map(f -> f.getSalary()).reduce((a, b) -> a + b).ifPresent(System.out::println);
-        System.out.println("_______________________________________\n");
+        System.out.printf("TOPMANAGER Count: %d, ФОТ %d руб. \n",
+                employees.stream()
+                        .filter(e -> TOPMANAGER.equals(e.getEmployeeType())).count(),
+                employees.stream()
+                        .filter(e -> TOPMANAGER.equals(e.getEmployeeType())).mapToInt(e -> e.getMonthSalary()).sum());
+        System.out.printf("MANAGER Count: %d, ФОТ %d руб. \n",
+                employees.stream()
+                        .filter(e -> MANAGER.equals(e.getEmployeeType())).count(),
+                employees.stream()
+                        .filter(e -> MANAGER.equals(e.getEmployeeType())).mapToInt(e -> e.getMonthSalary()).sum());
+        System.out.printf("OPERATOR Count: %d, ФОТ %d руб. \n",
+                employees.stream()
+                        .filter(e -> OPERATOR.equals(e.getEmployeeType())).count(),
+                employees.stream()
+                        .filter(e -> OPERATOR.equals(e.getEmployeeType())).mapToInt(e -> e.getMonthSalary()).sum());
+        getProfit();
+
     }
 }
 

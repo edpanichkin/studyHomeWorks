@@ -1,9 +1,9 @@
 package companyClasses;
 
 public class TopManager extends Employee {
-    final int OKLAD_FIX = 150000;
+    final int OKLAD_FIX = 100000;
     final int OKLAD_RND = 30000;
-    final int WHEN_BONUS = 10000000;
+    final int WHEN_BONUS = 13000000;
     final double BONUS_COEFF = 1.5;
 
     public TopManager() {

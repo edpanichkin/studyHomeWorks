@@ -4,6 +4,7 @@ public class Employee{
 
     protected Integer salary;
     protected Integer monthSalary;
+    protected Integer sales = 0;
     protected Employee.Type employeeType;
     protected Integer income = Company.getCompanyIncome();
 
@@ -22,6 +23,9 @@ public class Employee{
     public Integer getSalary() {
         return salary;
     }
+    public Integer getSales() {
+        return sales;
+    }
     public Employee.Type getEmployeeType() {
         return employeeType;
     }
@@ -31,6 +35,9 @@ public class Employee{
     }
     public void setSalary(Integer salary) {
         this.salary = salary;
+    }
+    public void setSales(Integer sales) {
+        this.sales = sales;
     }
     public void setEmployeeType(Employee.Type employeeType) {
         this.employeeType = employeeType;

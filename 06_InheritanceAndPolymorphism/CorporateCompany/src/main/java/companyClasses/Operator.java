@@ -1,7 +1,7 @@
 package companyClasses;
 
 public class Operator extends Employee {
-    final int OKLAD_FIX = 30000;
+    final int OKLAD_FIX = 25000;
     final int OKLAD_RND = 5000;
 
     public Operator(){
