@@ -4,11 +4,11 @@ import java.util.*;
 import static companyClasses.Employee.Type.*;
 
 public class Company {
-    public static List<Employee> employees = new ArrayList<>();
+    public List<Employee> employees = new ArrayList<>();
 
     public Company() {
     }
-    public static Integer getCompanyIncome() {
+    public Integer getCompanyIncome() {
         return employees.stream().mapToInt(e -> e.getSales()).sum();
     }
     public int getWageFund() {

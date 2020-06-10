@@ -1,12 +1,12 @@
 package companyClasses;
 
-public class Employee{
+public class Employee extends Company{
 
     protected Integer salary;
     protected Integer monthSalary;
     protected Integer sales = 0;
     protected Employee.Type employeeType;
-    protected Integer income = Company.getCompanyIncome();
+    protected Integer income = super.getCompanyIncome();
 
     public Employee() {
     }
