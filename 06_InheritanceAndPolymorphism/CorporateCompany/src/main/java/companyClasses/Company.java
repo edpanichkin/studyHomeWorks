@@ -19,20 +19,13 @@ public class Company {
                 getCompanyIncome(), getWageFund(), getCompanyIncome() - getWageFund());
     }
     //Блок Приема/Увольнения
-    public List<Employee> hire(Employee.Type employeeType) {
-        switch (employeeType) {
-            case MANAGER:
-                employees.add(new Manager());
-                break;
-            case OPERATOR:
-                employees.add(new Operator());
-                break;
-            case TOPMANAGER:
-                employees.add(new TopManager());
-                break;
-        }
+
+
+    public List<Employee> hire (Employee.Type employeeType) {
+        employees.add(Employee.hireType(employeeType));
         return employees;
     }
+
     public List<Employee> hireAll(int operator, int manager, int topManager) {
         for (int i = 0; i < operator; i++) {
             employees.add(new Operator());

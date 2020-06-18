@@ -1,5 +1,7 @@
 package companyClasses;
 
+import java.util.List;
+
 public class Employee extends Company{
 
     protected Integer salary;
@@ -11,7 +13,7 @@ public class Employee extends Company{
     public Employee() {
     }
 
-    protected enum Type {
+    public enum Type {
         TOPMANAGER,
         OPERATOR,
         MANAGER;
@@ -41,5 +43,21 @@ public class Employee extends Company{
     }
     public void setEmployeeType(Employee.Type employeeType) {
         this.employeeType = employeeType;
+    }
+
+    public static Employee hireType(Employee.Type employeeType) {
+        Employee e = new Employee();
+        switch (employeeType) {
+            case MANAGER:
+                e = new Manager();
+                break;
+            case OPERATOR:
+                e = new Operator();
+                break;
+            case TOPMANAGER:
+                e = new TopManager();
+                break;
+        }
+        return e;
     }
 }
