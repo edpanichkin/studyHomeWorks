@@ -1,5 +1,9 @@
 import core.Line;
 import core.Station;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,6 +16,11 @@ import java.util.Scanner;
 
 public class Main
 {
+    private static Logger logger;
+    private static final Marker SEARCH_LOG = MarkerManager.getMarker("Search");
+    private static final Marker EXCEPTION_LOG= MarkerManager.getMarker("Exception");
+    private static final Marker INPUT_LOG = MarkerManager.getMarker("InputError");
+
     private static String dataFile = "src/main/resources/map.json";
     private static Scanner scanner;
 
@@ -20,30 +29,37 @@ public class Main
     public static void main(String[] args)
     {
         RouteCalculator calculator = getRouteCalculator();
+        logger = LogManager.getLogger();
 
         System.out.println("Программа расчёта маршрутов метрополитена Санкт-Петербурга\n");
         scanner = new Scanner(System.in);
         for(;;)
         {
-            Station from = takeStation("Введите станцию отправления:");
-            Station to = takeStation("Введите станцию назначения:");
+            try {
+                Station from =  takeStation("Введите станцию отправления:");
+                Station to = takeStation("Введите станцию назначения:");
 
-            List<Station> route = calculator.getShortestRoute(from, to);
-            System.out.println("Маршрут:");
-            printRoute(route);
+                List<Station> route = calculator.getShortestRoute(from, to);
+                System.out.println("Маршрут:");
+                printRoute(route);
 
-            System.out.println("Длительность: " +
-                RouteCalculator.calculateDuration(route) + " минут");
+                System.out.println("Длительность: " +
+                        RouteCalculator.calculateDuration(route) + " минут");
+            }
+            catch (Exception e)
+            {
+                logger.error(EXCEPTION_LOG, e.toString());
+            }
         }
     }
 
-    public static RouteCalculator getRouteCalculator()
+    private static RouteCalculator getRouteCalculator()
     {
         createStationIndex();
         return new RouteCalculator(stationIndex);
     }
 
-    public static void printRoute(List<Station> route)
+    private static void printRoute(List<Station> route)
     {
         Station previousStation = null;
         for(Station station : route)
@@ -63,7 +79,7 @@ public class Main
         }
     }
 
-    public static Station takeStation(String message)
+    private static Station takeStation(String message)
     {
         for(;;)
         {
@@ -71,8 +87,10 @@ public class Main
             String line = scanner.nextLine().trim();
             Station station = stationIndex.getStation(line);
             if(station != null) {
+                logger.info(SEARCH_LOG, "Станция ввода: " + line);
                 return station;
             }
+            logger.info(INPUT_LOG,"Станция не найдена: " + line);
             System.out.println("Станция не найдена :(");
         }
     }
@@ -99,7 +117,7 @@ public class Main
         }
     }
 
-    public static void parseConnections(JSONArray connectionsArray)
+    private static void parseConnections(JSONArray connectionsArray)
     {
         connectionsArray.forEach(connectionObject ->
         {
@@ -123,7 +141,7 @@ public class Main
         });
     }
 
-    public static void parseStations(JSONObject stationsObject)
+    private static void parseStations(JSONObject stationsObject)
     {
         stationsObject.keySet().forEach(lineNumberObject ->
         {
@@ -139,7 +157,7 @@ public class Main
         });
     }
 
-    public static void parseLines(JSONArray linesArray)
+    private static void parseLines(JSONArray linesArray)
     {
         linesArray.forEach(lineObject -> {
             JSONObject lineJsonObject = (JSONObject) lineObject;
@@ -151,7 +169,7 @@ public class Main
         });
     }
 
-    public static String getJsonFile()
+    private static String getJsonFile()
     {
         StringBuilder builder = new StringBuilder();
         try {
