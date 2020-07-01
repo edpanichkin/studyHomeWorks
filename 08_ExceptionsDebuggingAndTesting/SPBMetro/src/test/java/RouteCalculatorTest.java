@@ -1,19 +1,21 @@
 import core.Line;
 import core.Station;
-import junit.framework.TestCase;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RouteCalculatorTest extends TestCase {
+
+public class RouteCalculatorTest{
 
     StationIndex stationIndex;
     RouteCalculator routeCalculator;
     List<Station> stations;
 
-    @Override
-    protected void setUp() {
+    @Before
+    public void setUp() {
 
         /* Схема тестовой линии
 
@@ -61,9 +63,29 @@ public class RouteCalculatorTest extends TestCase {
                 stationIndex.getStation("22"))));
         stationIndex.addConnection(new ArrayList<>(Arrays.asList(stationIndex.getStation("23"),
                 stationIndex.getStation("32"))));
+
     }
 
-    public void testCalculationRouteOnTheLine() throws NullPointerException {
+    @Test
+    public void testRoutePath(){
+
+        List<Station> testRoute = routeCalculator.getShortestRoute(
+                stationIndex.getStation("31"),
+                stationIndex.getStation("14"));
+        List<Station> expectedRoute = new ArrayList<>();
+
+        expectedRoute.add(stationIndex.getStation("31"));
+        expectedRoute.add(stationIndex.getStation("32"));
+        expectedRoute.add(stationIndex.getStation("23"));
+        expectedRoute.add(stationIndex.getStation("22"));
+        expectedRoute.add(stationIndex.getStation("12"));
+        expectedRoute.add(stationIndex.getStation("13"));
+        expectedRoute.add(stationIndex.getStation("14"));
+
+        assertEquals(expectedRoute, testRoute);
+    }
+    @Test
+    public void testCalculationRouteOnTheLine(){
 
         List<Station> testRoute = routeCalculator.getShortestRoute(
                 stationIndex.getStation("11"),
@@ -72,10 +94,11 @@ public class RouteCalculatorTest extends TestCase {
         double actual = RouteCalculator.calculateDuration(testRoute);
         double expected = 3 * 2.5; // 3 прогона
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual,0.0);
     }
 
-    public void testCalculationRouteWithOneConnection() throws NullPointerException {
+    @Test
+    public void testCalculationRouteWithOneConnection(){
 
         List<Station> testRoute = routeCalculator.getShortestRoute(
                 stationIndex.getStation("13"),
@@ -84,10 +107,11 @@ public class RouteCalculatorTest extends TestCase {
         double actual = RouteCalculator.calculateDuration(testRoute);
         double expected = 3 * 2.5 + 3.5; // 3 прогона, 1 переход
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, 0.0);
     }
 
-    public void testCalculationRouteWithTwoConnections() throws NullPointerException {
+    @Test
+    public void testCalculationRouteWithTwoConnections(){
 
         List<Station> testRoute = routeCalculator.getShortestRoute(
                 stationIndex.getStation("11"),
@@ -96,6 +120,6 @@ public class RouteCalculatorTest extends TestCase {
         double actual = RouteCalculator.calculateDuration(testRoute);
         double expected = 4 * 2.5 + 2 * 3.5; // 4 прогона, 2 перехода
 
-        assertEquals(expected, actual);
+        assertEquals(expected, actual, 0.0);
     }
 }
