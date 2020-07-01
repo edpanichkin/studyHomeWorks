@@ -4,15 +4,14 @@ public class Main{
     public static void main(String[] args) {
 
         Company companyIntel = new Company();
-        companyIntel.hire(Employee.Type.MANAGER);
-        companyIntel.hire(Employee.Type.TOPMANAGER);
-        companyIntel.hire(Employee.Type.OPERATOR);
-        //companyIntel.hireAll(180,80,10);
+        companyIntel.hire(180, Employee.Type.OPERATOR);
+        companyIntel.hire(80, Employee.Type.MANAGER);
+        companyIntel.hire(10, Employee.Type.TOPMANAGER);
+
         Company companyAMD = new Company();
-       // companyAMD.hireAll(0,0,1);
-        companyAMD.hire(Employee.Type.MANAGER);
-        companyAMD.hire(Employee.Type.TOPMANAGER);
-        companyAMD.hire(Employee.Type.OPERATOR);
+        companyAMD.hire(1800, Employee.Type.OPERATOR);
+        companyAMD.hire(800, Employee.Type.MANAGER);
+        companyAMD.hire(100, Employee.Type.TOPMANAGER);
 
         companyIntel.printCompany();
         companyAMD.printCompany();
