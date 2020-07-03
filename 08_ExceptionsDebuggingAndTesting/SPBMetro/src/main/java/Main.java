@@ -44,7 +44,7 @@ public class Main
             }
             catch (Exception e)
             {
-                logger.log(Level.ERROR, e.toString());
+                logger.error(e.toString());
             }
         }
     }
@@ -83,10 +83,10 @@ public class Main
             String line = scanner.nextLine().trim();
             Station station = stationIndex.getStation(line);
             if(station != null) {
-                logger.log(Level.INFO,"Станция ввода: " + line);
+                logger.info("Станция ввода: " + line);
                 return station;
             }
-            logger.log(Level.WARN,"Станция не найдена: " + line);
+            logger.warn("Станция не найдена: " + line);
             System.out.println("Станция не найдена :(");
         }
     }

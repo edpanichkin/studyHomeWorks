@@ -6,25 +6,30 @@
         </Console>
 
         <File name="Exception" fileName="logs/exceptions.log">
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</pattern>
-            </PatternLayout>         </File>
+            <PatternLayout pattern ="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </File>
         <File name="SearchStations" fileName="logs/search.log">
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</pattern>
-            </PatternLayout>         </File>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />
+            </Filters>
+        </File>
         <File name="InputError" fileName="logs/input_errors.log">
-            <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</pattern>
-            </PatternLayout>
+            <PatternLayout pattern ="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
         </File>
     </appenders>
 
     <loggers>
-        <root level="debug">
-            <appender-ref ref="Exception" level="ERROR"/>
-            <appender-ref ref="SearchStations" level="INFO"/>
-            <appender-ref ref="InputError" level="WARN"/>
+        <root level="ALL">
+            <appender-ref ref="Exception"/>
+            <appender-ref ref="SearchStations"/>
+            <appender-ref ref="InputError"/>
         </root>
     </loggers>
 </configuration>
