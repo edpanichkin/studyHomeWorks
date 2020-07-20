@@ -1,16 +1,16 @@
 package companyClasses;
 
-import java.util.List;
-
-public class Employee extends Company{
+public class Employee {
 
     protected Integer salary;
     protected Integer monthSalary;
     protected Integer sales = 0;
     protected Employee.Type employeeType;
-    protected Integer income = super.getCompanyIncome();
 
     public Employee() {
+    }
+
+    public void setBonus(Integer companyIncome) {
     }
 
     public enum Type {
@@ -38,6 +38,7 @@ public class Employee extends Company{
     public void setSalary(Integer salary) {
         this.salary = salary;
     }
+
     public void setSales(Integer sales) {
         this.sales = sales;
     }

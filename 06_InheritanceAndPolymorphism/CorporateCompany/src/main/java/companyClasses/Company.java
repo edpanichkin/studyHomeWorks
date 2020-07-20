@@ -1,23 +1,30 @@
 package companyClasses;
 
-import java.sql.SQLOutput;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static companyClasses.Employee.Type.*;
 
 public class Company {
     public List<Employee> employees = new ArrayList<>();
 
     public Company() {
+
+    }
+    public void setBonus() {
+        for (Employee staff: employees){
+            staff.setBonus(getCompanyIncome());
+        }
     }
     public Integer getCompanyIncome() {
-        return employees.stream().mapToInt(e -> e.getSales()).sum();
+        return employees.stream().mapToInt(Employee::getSales).sum();
     }
+
     public int getWageFund() {
-        return employees.stream().mapToInt(e -> e.getMonthSalary()).sum();
+        return employees.stream().mapToInt(Employee::getMonthSalary).sum();
     }
     public void getProfit() {
+        setBonus();
         System.out.printf("Доход с продаж: %d, ФОТ: %d \n Прибыль: %d\n\n",
                 getCompanyIncome(), getWageFund(), getCompanyIncome() - getWageFund());
     }
@@ -27,7 +34,6 @@ public class Company {
         employees.add(Employee.hireType(employeeType));
         return employees;
     }
-
     public List<Employee> hire(int count, Employee.Type employeeType) {
         if(count > 0) {
             for (int i = 0; i < count; i++) {
@@ -54,6 +60,7 @@ public class Company {
 
     //Блок печати
     public void getTopSalaryStaff(int count) {
+        setBonus();
         System.out.printf("\ngetTopSalaryStaff -> Count %s\n", count);
         employees.stream()
                 .map(c -> c.getSalary())
@@ -62,6 +69,7 @@ public class Company {
                 .forEach(System.out::println);
     }
     public void getLowestSalaryStaff(int count) {
+        setBonus();
         System.out.printf("\ngetLowestSalaryStaff -> Count %s\n", count);
         employees.stream()
                 .map(c -> c.getSalary())
@@ -70,7 +78,7 @@ public class Company {
                 .forEach(System.out::println);
     }
     public void printCompany() {
-
+        setBonus();
         Map<Employee.Type, Long> count = employees.stream()
                 .collect(Collectors.groupingBy(Employee::getEmployeeType, Collectors.counting()));
         Map<Employee.Type, Long> sumSalary = employees.stream()
@@ -79,7 +87,6 @@ public class Company {
         count.forEach((k,v) -> System.out.println(k + " count: " + v + " ФОТ: " + sumSalary.get(k) + "руб."));
 
         getProfit();
-
     }
 }
 

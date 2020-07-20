@@ -4,9 +4,14 @@ public class Main{
     public static void main(String[] args) {
 
         Company companyIntel = new Company();
-        companyIntel.hire(180, Employee.Type.OPERATOR);
-        companyIntel.hire(80, Employee.Type.MANAGER);
-        companyIntel.hire(10, Employee.Type.TOPMANAGER);
+
+        companyIntel.hire(1, Employee.Type.TOPMANAGER);
+        companyIntel.printCompany();
+
+        companyIntel.hire(400, Employee.Type.OPERATOR);
+        companyIntel.hire(400, Employee.Type.MANAGER);
+        companyIntel.printCompany();
+
 
         Company companyAMD = new Company();
         companyAMD.hire(1800, Employee.Type.OPERATOR);
@@ -14,7 +19,8 @@ public class Main{
         companyAMD.hire(100, Employee.Type.TOPMANAGER);
 
         companyIntel.printCompany();
-        companyAMD.printCompany();
+
+
 //        companyIntel.getTopSalaryStaff(15);
 //        companyIntel.getLowestSalaryStaff(30);
         //Увольнение 10%
