@@ -4,43 +4,37 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public class Main extends SimpleFileVisitor {
 
-    private static File directory;
-    static Path pathSource = Paths.get("copy");
-    static Path pathTarget = Paths.get("copy2");
+    static Path pathSource = Paths.get("D:\\test");
+    static Path pathTarget = Paths.get("D:\\test2");
 
     public static void main(String[] args) throws IOException {
-        //System.out.println(pathSource.toAbsolutePath() + "\n");
-        Files.walkFileTree(pathSource, new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Path pathTo = pathTarget.resolve(file.getFileName());
-                System.out.println(file.toString() + " " + file.getName(file.getNameCount()-2));
-                System.out.println("pathTo: " + pathTo);
-
-                Files.copy(file.toAbsolutePath(), pathTo, StandardCopyOption.REPLACE_EXISTING);
-
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        System.out.println(fileCopy(pathSource.toFile()));
+        filesAndDirsFullCopy(pathSource.toFile());
     }
 
-    public static long fileCopy (File folder){
+    public static void filesAndDirsFullCopy (File folder) throws IOException {
         File[] files = folder.listFiles();
-        long bytes = 0;
-
+        if(!Files.exists(pathTarget)){
+           Files.createDirectory(pathTarget);
+        }
         for (File file : files) {
             try {
                 if (!file.isDirectory()) {
-                    System.out.printf("Directory ");
-                    bytes += file.length();
+                    Files.copy(file.toPath(), pathChange(file.toString()),
+                            StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                 } else {
-                    bytes += fileCopy(new File(file.getAbsolutePath()));
+                    String str = file.getAbsolutePath();
+                    if(!Files.exists(pathChange(str))) {
+                        Files.createDirectory(pathChange(str));
+                    }
+                    filesAndDirsFullCopy(new File(str));
                 }
             } catch (Exception ex) {
-                System.out.println(ex.getMessage() + " " + file.getAbsolutePath());
+                System.out.println(ex.getMessage() + " ERROR " + file.getAbsolutePath());
+                ex.printStackTrace();
             }
         }
-        return bytes;
+    }
+    public static Path pathChange (String file){
+        return Paths.get(file.replace(pathSource.toString(),pathTarget.toString()));
     }
 }
