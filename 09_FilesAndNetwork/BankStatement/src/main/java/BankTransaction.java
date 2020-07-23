@@ -1,3 +1,4 @@
+
 public class BankTransaction {
     String type;
     String accountNum;
@@ -5,8 +6,19 @@ public class BankTransaction {
     String dateOperation;
     String reference;
     String operationInfo;
-    Double income;
-    Double expense;
+    String income;
+    String expense;
+    Double expenseDouble;
+
+    public String getMccCode() {
+        return mccCode;
+    }
+
+    public void setMccCode(String mccCode) {
+        this.mccCode = mccCode;
+    }
+
+    String mccCode;
 
     public String getType() {
         return type;
@@ -56,27 +68,31 @@ public class BankTransaction {
         this.operationInfo = operationInfo;
     }
 
-    public Double getIncome() {
+    public String getIncome() {
         return income;
     }
 
-    public void setIncome(Double income) {
+    public void setIncome(String income) {
         this.income = income;
     }
 
-    public Double getExpense() {
+    public String getExpense() {
         return expense;
     }
 
-    public void setExpense(Double expense) {
+    public void setExpense(String expense) {
         this.expense = expense;
     }
 
 
 
+    public Double expenseDouble(){
+        return  Double.parseDouble(this.expense);
+}
+
     public BankTransaction(String type, String accountNum, String currency,
                            String dateOperation, String reference, String operationInfo,
-                           Double income, Double expense){
+                           String income, String expense, String mccCode){
         this.type = type;
         this.accountNum = accountNum;
         this.currency = currency;
@@ -85,5 +101,6 @@ public class BankTransaction {
         this.operationInfo = operationInfo;
         this.income = income;
         this.expense = expense;
+        this.mccCode = mccCode;
     }
 }
