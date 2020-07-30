@@ -2,7 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Line {
+    public String getNumber() {
+        return number;
+    }
+
     private String number;
+
+    public String getName() {
+        return name;
+    }
+
     private String name;
     private List<Station> stations;
 
