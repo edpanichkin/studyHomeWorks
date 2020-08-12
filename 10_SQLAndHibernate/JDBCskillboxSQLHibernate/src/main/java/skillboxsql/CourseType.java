@@ -1,3 +1,5 @@
+package skillboxsql;
+
 public enum CourseType {
     DESIGN,
     PROGRAMMING,

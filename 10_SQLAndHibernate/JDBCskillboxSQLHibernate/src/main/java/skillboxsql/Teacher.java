@@ -1,3 +1,5 @@
+package skillboxsql;
+
 import javax.persistence.*;
 
 @Entity

@@ -5,11 +5,9 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
+import skillboxsql.Course;
+import skillboxsql.Student;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
