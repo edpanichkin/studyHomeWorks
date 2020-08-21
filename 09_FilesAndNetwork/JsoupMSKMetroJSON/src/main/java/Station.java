@@ -5,14 +5,14 @@ public class Station {
 
     private String line;
     private String name;
-    private List<String> connects = new ArrayList<>();
+    private List<Connection> connects = new ArrayList<>();
 
-    public List<String> getConnects() {
+    public List<Connection> getConnects() {
         return connects;
     }
 
-    public void addConnects(String connection) {
-        connects.add(connection);
+    public void addConnects(String stationTo, String lineTo) {
+        connects.add(new Connection(stationTo, lineTo));
     }
 
     public Station(String name, String line)

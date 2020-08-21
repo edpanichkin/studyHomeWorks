@@ -1,15 +1,13 @@
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
     private final static String PATH_SOURCE = "https://www.moscowmap.ru/metro.html#lines";
@@ -19,11 +17,79 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Document doc = Jsoup.connect(PATH_SOURCE).maxBodySize(0).get();
         List<Line> moscowLines = parseLines(doc.select(LINES));
-        List<Station> moscowStations = parseStations(doc.select("span"));
-        //moscowStations.forEach(Station::printConnections);
-        toMapStations(moscowStations, moscowLines);
-    }
+        List<Station> moscowStations = parseStations(doc, moscowLines);
 
+        PrintWriter writer = new PrintWriter("src/main/resources/msk.json");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+
+        moscowStations = duplicateConnDelete(moscowStations); //тестовое решение не доделанное
+        List<List<Connection>> connections = new ArrayList<>();
+        for (int i = 0; i < moscowStations.size(); i++) {
+            List<Connection> list = new ArrayList<>();
+            if(!moscowStations.get(i).getConnects().isEmpty()){
+                list.add(new Connection(moscowStations.get(i).getLine(),moscowStations.get(i).getName()));
+                list.addAll(moscowStations.get(i).getConnects());
+                Collections.sort(list);
+                connections.add(list);
+            }
+
+        }
+        Collections.sort(connections,new Comparator<List<Connection>>() {
+            public int compare(List<Connection> o1, List<Connection> o2) {//
+                return o1.size()-o2.size();
+            }
+        });
+        Metro mskMetro = new Metro();
+
+        mskMetro.setLines(moscowLines);
+        mskMetro.setStations(moscowStations.stream()
+                .collect(Collectors.groupingBy(Station::getLine, Collectors.mapping(Station::getName, Collectors.toList()))));
+
+        mskMetro.setConnections(connections);
+
+
+        writer.write(gson.toJson(mskMetro));
+        writer.flush();
+        writer.close();
+    }
+    private static List<Station> duplicateConnDelete(List<Station> station) {
+        List<Integer> indexConnect = new ArrayList<>();
+        for (int i = 0; i < station.size(); i++) {
+            if (station.get(i).getConnects().size() > 0) {
+                indexConnect.add(i);
+            }
+        }
+        try {
+            List<Integer> arrayK = new ArrayList<>();
+            for (Integer k : indexConnect) {
+                    if (!arrayK.contains(k)) {
+                        String searchStName = station.get(k).getName();
+                        String searchStLine = station.get(k).getLine();
+                        String connectedStationName = station.get(k).getConnects().get(0).getStation();
+                        String connectedStationLine = station.get(k).getConnects().get(0).getLine();
+                        System.out.printf("%s | %s, %s  = %s, %s\n", k, searchStLine, searchStName, connectedStationLine, connectedStationName);
+
+                        for (int i = 0; i < station.size(); i++) {
+                            if (station.get(i).getLine().equals(connectedStationLine) && station.get(i).getName().equals(connectedStationName)) {
+                                Station tmpStation = station.get(i);
+                                arrayK.add(i);
+
+                                if (tmpStation.getConnects().get(0).getLine().equals(searchStLine)
+                                        && tmpStation.getConnects().get(0).getStation().equals(searchStName)) {
+                                    tmpStation.getConnects().remove(0);
+                                    System.out.println("_________NEXT______");
+                                }
+                            }
+                        }
+                    }
+                }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return station;
+    }
     private static List<Line> parseLines(Elements elements) {
         List<Line> lines = new ArrayList<>();
         for (int i = 0; i < elements.size(); i++) {
@@ -34,78 +100,28 @@ public class Main {
         return lines;
     }
 
-    private static List<Station> parseStations(Elements elements) {
+    private static List<Station> parseStations(Document doc, List<Line> lines) {
         List<Station> stations = new ArrayList<>();
-        String stationName = "";
-        int stationIndex = 0;
-        for (int i = 0; i < elements.size()-3; i++) {//ИСПРАВИТЬ КОСТЫЛЬ!
-            if (elements.get(i).toString().indexOf("js-metro-line") > 0) { //вхождение в линию
-                String lineName = elements.get(i).text();
-                String lineNum = elements.get(i).attr("data-line");
-
-                while (!elements.get(i + 1).toString().contains("js-metro-line")&&i<950) {
-                    i++;
-                    if(!elements.get(i).select("span.num").text().isEmpty()){
-                        stationName = elements.get(i+1).select("span.name").text();
-                        stations.add(new Station(stationName,lineName));
-                        stationIndex++;
-                    }
-                    if(elements.get(i).toString().contains("t-icon-metroln")){
-                        stations.get(stationIndex-1).addConnects(elements.get(i).attr("title"));
+        for (int j = 0; j < lines.size(); j++) {
+            Elements e = doc.select("div[data-line=" + lines.get(j).getNumber() + "]").select("p");
+            for (int i = 0; i < e.size(); i++) {
+                stations.add(new Station(e.get(i).select("span.name").text(),lines.get(j).getNumber()));
+                if (!e.get(i).select("span").attr("title").isEmpty()) {
+                    Elements eTmp = e.get(i).select("span");
+                    for (int k = 2; k < eTmp.size(); k++) {
+                        stations.get(stations.size()-1)
+                                .addConnects(connParseLineNum(eTmp.get(k).toString()),connParseStationName(eTmp.get(k).toString()));
                     }
                 }
             }
         }
         return stations;
     }
-    private static void toMapStations (List<Station> stations, List<Line> lines) throws FileNotFoundException {
-        Map<String, List<Station>> map = stations.stream()
-                .collect(Collectors.groupingBy(Station::getLine));
-        PrintWriter writer = new PrintWriter("src/main/resources/msk.json");
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-
-        writer.write(.toJSONString());
-        writer.flush();
-        writer.close();
-
-
-
-//        //STATIONS
-//        writer.write("{\n");
-//        writer.write("\t\"stations\" : {\n");
-//        for(int i = 0; i < lines.size(); i++) {
-//            if(i > 0) {
-//                writer.write("\t\t],\n");
-//            }
-//            writer.write("\t\t\"" + lines.get(i).getNumber() + "\" : [\n");
-//            map.get(lines.get(i).getName())
-//                    .forEach(s -> {
-//                    writer.write("\t\t\t\"" + s.getName() + "\",\n");
-//                    });
-//            if(i == (lines.size() - 1)) {
-//                writer.write("\t\t],\n\t},\n");
-//            }
-//        }
-//        //CONNECTIONS
-//        //LINES
-//        writer.write("\t\"lines\" : [\n\t\t{\n");
-//        for (int i = 0; i < lines.size() ; i++) {
-//            if(i > 0) {
-//                writer.write("\t\t{\n");
-//            }
-//            writer.write("\t\t\t\"number\" : \"" + lines.get(i).getNumber() +
-//                    "\",\n\t\t\t\"name\" : \"" + lines.get(i).getName() + "\"\n");
-//            if(i < lines.size() - 1){
-//                writer.write("\t\t},\n");
-//            }
-//            if(i == lines.size() - 1){
-//                writer.write("\t\t}\n");
-//            }
-//
-//        }
-//        writer.flush();
-//        writer.close();
+    private static String connParseLineNum (String str){
+        return  str.substring(str.indexOf("ln-"),str.indexOf("\" title")).replace("ln-","");
+    }
+    private static String connParseStationName (String str){
+        return str.substring(str.indexOf("«"),str.indexOf("»")).replace("«","");
     }
 
 }
