@@ -23,23 +23,12 @@ public class Main {
         List<Line> moscowLines = parseLines(doc.select(LINES));
         List<Station> moscowStations = parseStations(doc, moscowLines);
 
-        Set<List<Connection>> connections = new HashSet<>();
-        for (Station moscowStation : moscowStations) {
-            List<Connection> list = new ArrayList<>();
-            if (!moscowStation.getConnects().isEmpty()) {
-                list.add(new Connection(moscowStation.getLine(), moscowStation.getName()));
-                list.addAll(moscowStation.getConnects());
-                list.sort((o1, o2) -> o1.getLine().compareTo(o2.getLine()));
-                connections.add(list);
-            }
-        }
-
         Metro mskMetro = new Metro();
         mskMetro.setLines(moscowLines);
         mskMetro.setStations(moscowStations.stream()
                 .collect(Collectors.groupingBy(Station::getLine,
                         Collectors.mapping(Station::getName, Collectors.toList()))));
-        mskMetro.setConnections(connections);
+        mskMetro.setConnections(connStations(moscowStations));
 
         try(PrintWriter writer = new PrintWriter(JSON_SOURCE)) {
             writer.write(gson.toJson(mskMetro));
@@ -80,4 +69,17 @@ public class Main {
     private static String connParseStationName (String str){
         return str.substring(str.indexOf("«"),str.indexOf("»")).replace("«","");
     }
+    private static Set<List<Connection>> connStations (List<Station> moscowStations){
+        Set<List<Connection>> connections = new HashSet<>();
+        for (Station moscowStation : moscowStations) {
+            List<Connection> list = new ArrayList<>();
+            if (!moscowStation.getConnects().isEmpty()) {
+                list.add(new Connection(moscowStation.getLine(), moscowStation.getName()));
+                list.addAll(moscowStation.getConnects());
+                list.sort((o1, o2) -> o1.getLine().compareTo(o2.getLine()));
+                connections.add(list);
+            }
+        } return connections;
+    }
+
 }
