@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Station {
 
@@ -24,16 +25,8 @@ public class Station {
     public String getLine() {
         return line;
     }
-
     public String getName() {
         return name;
     }
 
-    public void print(){
-        System.out.printf("%s: %s \n", line, name);
-    }
-    public void printConnections(){
-        System.out.printf("IN %s: %s\n", line, name);
-        connects.forEach(System.out::println);
-    }
 }

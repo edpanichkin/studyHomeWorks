@@ -12,7 +12,6 @@ public class Line {
     public String getNumber() {
         return number;
     }
-
     public String getName() {
         return name;
     }

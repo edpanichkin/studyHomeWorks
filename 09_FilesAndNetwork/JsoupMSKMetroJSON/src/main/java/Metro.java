@@ -1,12 +1,9 @@
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Metro {
     private List<Line> lines;
     private Map<String, List<String>> stations;
-    private List<List<Connection>> connections;
+    private Set<List<Connection>> connections;
 
     public List<Line> getLines() {
         return lines;
@@ -24,11 +21,11 @@ public class Metro {
         this.stations = stations;
     }
 
-    public List<List<Connection>> getConnections() {
+    public Set<List<Connection>> getConnections() {
         return connections;
     }
 
-    public void setConnections(List<List<Connection>> connections) {
+    public void setConnections(Set<List<Connection>> connections) {
         this.connections = connections;
     }
 
