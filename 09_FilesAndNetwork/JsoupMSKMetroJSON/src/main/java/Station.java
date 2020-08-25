@@ -12,7 +12,7 @@ public class Station {
         return connects;
     }
 
-    public void addConnects(String stationTo, String lineTo) {
+    public void addConnection(String stationTo, String lineTo) {
         connects.add(new Connection(stationTo, lineTo));
     }
 

@@ -55,7 +55,7 @@ public class Main {
                     Elements connects = e.select("span");
                     for (int k = 2; k < connects.size(); k++) {
                         stations.get(stations.size() - 1)
-                                .addConnects(connParseLineNum(connects.get(k).toString()),
+                                .addConnection(connParseLineNum(connects.get(k).toString()),
                                         connParseStationName(connects.get(k).toString()));
                     }
                 }
