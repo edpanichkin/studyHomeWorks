@@ -12,6 +12,9 @@ public class Student {
     private String name;
     private int age;
 
+    @Column(name ="registration_date")
+    private Date registrationDate;
+
     public int getId() {
         return id;
     }
@@ -44,7 +47,5 @@ public class Student {
         this.registrationDate = registrationDate;
     }
 
-    @Column(name ="registration_date")
-    private Date registrationDate;
 
 }

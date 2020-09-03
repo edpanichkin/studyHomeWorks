@@ -9,17 +9,25 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     private int duration;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "enum")
     private CourseType type;
+
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
     @Column(name = "students_count", nullable = true)
     private Integer studentCount;
+
     private int price;
+
     @Column(name = "price_per_hour")
     private float pricePerHour;
 
@@ -106,10 +114,4 @@ public class Course {
     public List<Student> getStudents() {
         return students;
     }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
-
-
 }
