@@ -14,12 +14,12 @@ public class Course {
     private int duration;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum")
+    @Column(columnDefinition = "ENUM('DESIGN','PROGRAMMING','MARKETING','MANAGEMENT','BUSINESS')")
     private CourseType type;
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
