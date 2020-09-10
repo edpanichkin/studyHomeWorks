@@ -1,5 +1,4 @@
 package skillboxsql;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,11 +12,11 @@ public class Subscription {
     private Id id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "student_id", nullable = false, insertable = false, updatable = false)
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false, insertable = false, updatable = false)
     private Course course;
 
     @Column(name = "subscription_date")

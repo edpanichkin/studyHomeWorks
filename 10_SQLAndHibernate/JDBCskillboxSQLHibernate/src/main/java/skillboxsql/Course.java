@@ -20,7 +20,7 @@ public class Course {
     private String description;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
     @Column(name = "students_count", nullable = true)
@@ -80,11 +80,11 @@ public class Course {
         this.description = description;
     }
 
-    public Teacher getTeacherId() {
+    public Teacher getTeacher() {
         return teacher;
     }
 
-    public void setTeacherId(Teacher teacher) {
+    public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
 
