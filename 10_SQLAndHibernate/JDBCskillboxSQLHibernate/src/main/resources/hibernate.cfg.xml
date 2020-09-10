@@ -9,9 +9,10 @@
         <property name="connection.username">root</property>
         <property name="connection.password">testtest</property>
         <!-- JDBC connection pool settings ... using built-in test pool -->
-        <property name="connection.pool_size">10</property>
+        <property name="connection.pool_size">1</property>
         <!-- Select our SQL dialect -->
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.connection.characterEncoding">utf8</property>
         <!-- Echo the SQL to stdout -->
         <property name="show_sql">true</property>
         <!-- Set the current session context -->
@@ -22,5 +23,6 @@
         <mapping class="skillboxsql.Course"/>
         <mapping class="skillboxsql.Student"/>
         <mapping class="skillboxsql.Teacher"/>
+        <mapping class="skillboxsql.Subscription"/>
     </session-factory>
 </hibernate-configuration>

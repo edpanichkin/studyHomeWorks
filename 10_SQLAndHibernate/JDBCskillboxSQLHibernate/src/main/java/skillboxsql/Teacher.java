@@ -1,6 +1,7 @@
 package skillboxsql;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Teachers")
@@ -8,6 +9,13 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private String name;
+    private int salary;
+    private int age;
+
+    @OneToMany(mappedBy = "teacher")
+    private List<Course> courses;
 
     public int getId() {
         return id;
@@ -41,7 +49,11 @@ public class Teacher {
         this.age = age;
     }
 
-    private String name;
-    private int salary;
-    private int age;
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
 }

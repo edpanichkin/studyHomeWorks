@@ -71,7 +71,6 @@ public class Subscription {
         @Column(name = "student_id")
         private int studentId;
 
-
         @Column(name = "course_id")
         private int courseId;
 
@@ -117,5 +116,4 @@ public class Subscription {
             return Objects.hash(studentId, courseId);
         }
     }
-
 }
