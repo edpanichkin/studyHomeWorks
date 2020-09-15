@@ -5,6 +5,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 import skillboxsql.*;
 
 import java.util.Date;
@@ -18,32 +19,27 @@ public class Main {
         try(SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
             Session session = sessionFactory.openSession())
         {
-            Transaction transaction = session.beginTransaction();
-            Student student = new Student();
-            Teacher teacher = new Teacher();
-            Course course = new Course();
+            fillLinkedPurchaseList(session);
+        }
+    }
 
-            student.setName("Юнец Сорванец");
-            student.setAge(20);
-            student.setRegistrationDate(new Date());
-            teacher.setName("Ученый Заученый");
-            teacher.setAge(35);
-            teacher.setSalary(50000);
-            session.save(student);
-            session.save(teacher);
+    public static void fillLinkedPurchaseList(Session session){
+        List<Object[]> pList = session.createNativeQuery(
+                "SELECT student_name, course_name FROM purchaselist").getResultList();
+        for (Object[] pow: pList){
+            session.beginTransaction();
+            int sId = Integer.parseInt(session.createQuery("SELECT S.id FROM Student S WHERE name = :sname").
+                    setParameter("sname", pow[0])
+                    .getResultList().toString()
+                    .replace("[","").replace("]",""));
 
-            course.setName("Тестовый курс");
-            course.setType(CourseType.BUSINESS);
-            course.setDescription("Проверка маппингов в задании 10.5.3");
-            course.setTeacher(teacher);
-            session.save(course);
-
-            Subscription subscription = new Subscription(
-                    new Subscription.IdSubscription(student, course), new Date());
-            session.save(subscription);
-            System.out.println(session.get(Subscription.class, subscription.getId()));
-
-            transaction.commit();
+            int cId = Integer.parseInt(session.createQuery("SELECT C.id FROM Course C WHERE name = :cname")
+                    .setParameter("cname", pow[1])
+                    .getResultList().toString()
+                    .replace("[","").replace("]",""));
+            LinkedPurchaseList linkedPL = new LinkedPurchaseList(sId, cId);
+            session.save(linkedPL);
+            session.getTransaction().commit();
         }
     }
 }
