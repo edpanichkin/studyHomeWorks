@@ -18,43 +18,17 @@ public class Main {
         try(SessionFactory sessionFactory = metadata.getSessionFactoryBuilder().build();
             Session session = sessionFactory.openSession())
         {
-            Transaction transaction = session.beginTransaction();
+            List<PurchaseList> pList = session.createQuery("from skillboxsql.PurchaseList").getResultList();
+
+            for(PurchaseList pl : pList){
+                session.beginTransaction();
+                LinkedPurchaseList stId = new LinkedPurchaseList(pl.getPlId().getStudent().getId(),
+                        pl.getPlId().getCourse().getId());
+                session.save(stId);
+                session.getTransaction().commit();
+            }
 
 
-
-            Student student = new Student();
-            Teacher teacher = new Teacher();
-            Course course = new Course();
-
-
-            student.setName("Юнец Сорванец");
-            student.setAge(20);
-            student.setRegistrationDate(new Date());
-            teacher.setName("Ученый Заученый");
-            teacher.setAge(35);
-            teacher.setSalary(50000);
-            session.save(student);
-            session.save(teacher);
-
-            course.setName("Тестовый курс");
-            course.setType(CourseType.BUSINESS);
-            course.setDescription("Проверка маппингов в задании 10.5.3");
-            course.setTeacher(teacher);
-            session.save(course);
-
-            Subscription subscription = new Subscription(
-                    new Subscription.IdSubscription(student, course), new Date());
-            session.save(subscription);
-
-//            String hql = "from Course order by studentCount";
-//            List<Course> courses = session.createQuery(hql).getResultList();
-//            for (Course course : courses) {
-//                System.out.println(course.getName() + " // - Кол-во: " + course.getStudentCount());
-//                List<Student> studentList = course.getStudents();
-//                System.out.println(">> Данные из базы о студентах на курсе:");
-//                studentList.forEach(s -> System.out.println(">>>> " + s.getName()));
-//            }
-            transaction.commit();
         }
     }
 }

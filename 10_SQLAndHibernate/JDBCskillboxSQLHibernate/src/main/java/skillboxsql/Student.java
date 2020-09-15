@@ -1,12 +1,13 @@
 package skillboxsql;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "Students")
-public class Student {
+public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,7 +17,7 @@ public class Student {
     @Column(name ="registration_date")
     private Date registrationDate;
 
-    @OneToMany(mappedBy = "id.student")
+    @OneToMany(mappedBy = "id.student", fetch = FetchType.LAZY)
     private List<Subscription> subscriptions;
 
     public int getId() {

@@ -6,30 +6,41 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Purchaselist")
+@Table(name = "purchaselist")
 public class PurchaseList {
+
     @EmbeddedId
     private PurchaseListId plId;
+
     private int price;
     @Column(name = "subscription_date")
     private Date subscriptionDate;
 
+    public PurchaseListId getPlId() {
+        return plId;
+    }
+
     @Embeddable
-    private static class PurchaseListId implements Serializable {
+    public static class PurchaseListId implements Serializable {
+
         @ManyToOne
         @JoinColumn(name = "student_name", referencedColumnName="name")
-        private Student student;
+        protected Student student;
         @ManyToOne
         @JoinColumn(name = "course_name", referencedColumnName="name")
-        private Course course;
+        protected Course course;
 
         public PurchaseListId() {
         }
 
-        public PurchaseListId(Student student, Course course) {
-            this.student = student;
-            this.course = course;
+        public Student getStudent() {
+            return student;
         }
+
+        public Course getCourse() {
+            return course;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {

@@ -1,11 +1,12 @@
 package skillboxsql;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "Courses")
-public class Course {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -31,12 +32,12 @@ public class Course {
     @Column(name = "price_per_hour")
     private float pricePerHour;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "Subscriptions",
         joinColumns = {@JoinColumn(name = "course_id")},
         inverseJoinColumns = {@JoinColumn(name ="student_id")})
     private List<Student> students;
-    @OneToMany(mappedBy = "id.course")
+    @OneToMany(mappedBy = "id.course", fetch = FetchType.LAZY)
     private List<Subscription> subscriptions;
 
     public Course(){

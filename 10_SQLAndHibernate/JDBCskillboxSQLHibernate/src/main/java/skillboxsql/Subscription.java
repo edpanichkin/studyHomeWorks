@@ -21,6 +21,13 @@ public class Subscription {
         this.subscriptionDate = subscriptionDate;
     }
 
+    public Date getSubscriptionDate() {
+        return subscriptionDate;
+    }
+    public IdSubscription getId() {
+        return id;
+    }
+
     @Embeddable
     public static class IdSubscription implements Serializable {
         @ManyToOne
@@ -38,7 +45,13 @@ public class Subscription {
             this.course = course;
         }
 
+        public Student getStudent() {
+            return student;
+        }
 
+        public Course getCourse() {
+            return course;
+        }
 
         @Override
         public boolean equals(Object o) {
