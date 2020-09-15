@@ -54,10 +54,4 @@ public class Student implements Serializable {
     public List<Subscription> getSubscriptions() {
         return subscriptions;
     }
-
-    public void setSubscriptions(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
-
-
 }

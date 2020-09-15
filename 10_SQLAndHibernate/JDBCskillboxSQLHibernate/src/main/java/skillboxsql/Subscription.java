@@ -31,10 +31,10 @@ public class Subscription {
     @Embeddable
     public static class IdSubscription implements Serializable {
         @ManyToOne
-        @JoinColumn(name = "student_id", insertable = false, updatable = false)
+        @JoinColumn(name = "student_id")
         private Student student;
         @ManyToOne
-        @JoinColumn(name = "course_id", insertable = false, updatable = false)
+        @JoinColumn(name = "course_id")
         private Course course;
 
         public IdSubscription() {
