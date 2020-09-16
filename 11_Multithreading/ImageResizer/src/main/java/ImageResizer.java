@@ -7,7 +7,6 @@ import java.util.List;
 
 public class ImageResizer implements Runnable {
     private File[] files;
-    private List<File> lFiles;
     private int newWidth;
     private String dstFolder;
     private long start;
@@ -35,12 +34,18 @@ public class ImageResizer implements Runnable {
                 BufferedImage newImage = Scalr.resize(image, Scalr.Method.BALANCED, newWidth, newHeight);
 
                 File newFile = new File(dstFolder + "/" + file.getName());
-                ImageIO.write(newImage, "jpg", newFile);
+                ImageIO.write(newImage, getFileExtension(file), newFile);
             }
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
         System.out.println("Finished: " + (System.currentTimeMillis() - start));
+    }
+    private String getFileExtension(File file) {
+        String fileName = file.getName();
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        else return "";
     }
 }
