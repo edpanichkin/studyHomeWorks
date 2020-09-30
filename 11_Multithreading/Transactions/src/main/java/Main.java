@@ -17,7 +17,7 @@ public class Main {
         for (int i = 0; i < Runtime.getRuntime().availableProcessors() * 2; i++) {
             threadList.add(new Thread(() -> {
                 try {
-                    for (int j = 0; j < 100000; j++) {
+                    for (int j = 0; j < 1000; j++) {
                         String from = String.format(ACC_NUM_FORMAT, 1 + random.nextInt(998));
                         String to = String.format(ACC_NUM_FORMAT, 1 + random.nextInt(998));
                         int rndAmount = random.nextInt(50000);
@@ -42,6 +42,9 @@ public class Main {
 
         bank.debugPrint();
         bank.printBlockedCount();
+        System.out.println(bank.getAccountBalance("001"));
+        bank.transfer("001", "002",1);
+        System.out.println(bank.getAccountBalance("001"));
         System.out.println("ALL DONE, " + (System.currentTimeMillis() - start) + " ms");
     }
 }

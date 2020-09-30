@@ -20,6 +20,12 @@ public class Account
     public synchronized long getMoney() {
         return money;
     }
+    public synchronized void transferOff(long amount) {
+        money -= amount;
+    }
+    public synchronized void transferIn(long amount) {
+        money += amount;
+    }
 
     public synchronized void setMoney(long money) {
         this.money = money;
