@@ -1,6 +1,5 @@
 import org.junit.*;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -66,7 +65,6 @@ public class BankTest {
         assertEquals(bank.getAccountBalance("002"), 950000);
         assertEquals(bank.getAccountBalance("003"), 550000);
         assertEquals(bank.getAccountBalance("004"), 499999);
-        es.shutdown();
     }
 
 }

@@ -16,7 +16,6 @@ public class Main {
         }
         bank.bankBalance();
         bank.printBlockedCount();
-        System.out.println("Acc 001 balance " + bank.getAccountBalance("001"));
         System.out.println("Program START!");
 
         ExecutorService es = Executors.newFixedThreadPool(4);
@@ -28,9 +27,7 @@ public class Main {
                     int rndAmount = random.nextInt(50000);
                     long amount = (Math.random() < 0.01 ? (50000 + rndAmount) : rndAmount);
                     bank.transfer(from, to, amount);
-                    //System.out.println(Thread.currentThread().getName() + " " + j);
                 }
-                System.out.println(Thread.currentThread().getName() + " - TASK DONE / active: " + Thread.activeCount());
             }
             catch (InterruptedException e) {
                 e.printStackTrace();

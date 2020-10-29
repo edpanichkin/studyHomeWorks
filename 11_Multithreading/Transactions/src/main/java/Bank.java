@@ -82,10 +82,26 @@ public class Bank
                 + " | Active accounts: " + accounts.values().stream().filter(a -> !a.isFraud()).count());
 
     }
-    private synchronized void transferOperationApproved (String fromAccountNum, String toAccountNum, long amount){
-        transferOKCount.incrementAndGet();
-        accounts.get(fromAccountNum).transferOff(amount);
-        accounts.get(toAccountNum).transferIn(amount);
+    private void transferOperationApproved (String fromAccountNum, String toAccountNum, long amount){
+        if (fromAccountNum.compareTo(toAccountNum) > 0) {
+            synchronized (accounts.get(fromAccountNum)) {
+                synchronized (accounts.get(toAccountNum)) {
+                    transferOKCount.incrementAndGet();
+                    accounts.get(fromAccountNum).transferOff(amount);
+                    accounts.get(toAccountNum).transferIn(amount);
+                }
+            }
+        }
+        else {
+            synchronized (accounts.get(toAccountNum)) {
+                synchronized (accounts.get(fromAccountNum)) {
+                    transferOKCount.incrementAndGet();
+                    accounts.get(fromAccountNum).transferOff(amount);
+                    accounts.get(toAccountNum).transferIn(amount);
+                }
+            }
+        }
+
     }
     public void debugPrint(){
         bankBalance();
