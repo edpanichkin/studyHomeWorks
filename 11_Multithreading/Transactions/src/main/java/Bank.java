@@ -1,13 +1,14 @@
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Bank
 {
     private static final String ACC_NUM_FORMAT = "%03d";
     private static final int TIME_TO_FRAUD_CHECK = 10;
     private static final int SUM_TO_FRAUD_CHECK = 50000;
-    private int transferCount = 0;
-    private int transferOKCount = 0;
+    private AtomicInteger transferCount = new AtomicInteger(0);
+    private AtomicInteger transferOKCount = new AtomicInteger(0);
     private HashMap<String, Account> accounts;
     private final Random random = new Random();
 
@@ -39,11 +40,15 @@ public class Bank
      * метод isFraud. Если возвращается true, то делается блокировка
      * счетов (как – на ваше усмотрение)
      */
-
+    public boolean validCheck(String fromAccountNum, String toAccountNum, long amount) {
+        boolean validCheck = !fromAccountNum.equals(toAccountNum)
+                && !accountFraudCheck(fromAccountNum, toAccountNum)
+                && accounts.get(fromAccountNum).getMoney() >= amount;
+        return validCheck;
+    }
     public void transfer(String fromAccountNum, String toAccountNum, long amount) throws InterruptedException {
-        transferCount++;
-        if(!accountFraudCheck(fromAccountNum, toAccountNum)
-                && accounts.get(fromAccountNum).getMoney() >= amount)
+        transferCount.incrementAndGet();
+        if(validCheck(fromAccountNum,toAccountNum, amount))
         {
             if ((amount > SUM_TO_FRAUD_CHECK)) {
                 if (isFraud(fromAccountNum, toAccountNum, amount)) {
@@ -59,7 +64,7 @@ public class Bank
     private boolean accountFraudCheck(String fromAccountNum, String toAccountNum) {
         return  accounts.get(fromAccountNum).isFraud() && accounts.get(toAccountNum).isFraud();
     }
-    private void blockAfterFraudCheck(String fromAccountNum, String toAccountNum){
+    public void blockAfterFraudCheck(String fromAccountNum, String toAccountNum){
         accounts.get(fromAccountNum).setFraud(true);
         accounts.get(toAccountNum).setFraud(true);
     }
@@ -78,14 +83,30 @@ public class Bank
 
     }
     private void transferOperationApproved (String fromAccountNum, String toAccountNum, long amount){
-        transferOKCount++;
-        accounts.get(fromAccountNum).setMoney(accounts.get(fromAccountNum).getMoney() - amount);
-        accounts.get(toAccountNum).setMoney(accounts.get(toAccountNum).getMoney() + amount);
+        if (fromAccountNum.compareTo(toAccountNum) > 0) {
+            synchronized (accounts.get(fromAccountNum)) {
+                synchronized (accounts.get(toAccountNum)) {
+                    transferOKCount.incrementAndGet();
+                    accounts.get(fromAccountNum).transferOff(amount);
+                    accounts.get(toAccountNum).transferIn(amount);
+                }
+            }
+        }
+        else {
+            synchronized (accounts.get(toAccountNum)) {
+                synchronized (accounts.get(fromAccountNum)) {
+                    transferOKCount.incrementAndGet();
+                    accounts.get(fromAccountNum).transferOff(amount);
+                    accounts.get(toAccountNum).transferIn(amount);
+                }
+            }
+        }
+
     }
     public void debugPrint(){
         bankBalance();
         System.out.printf("Transfers %s, OK %s\n",
-            transferCount, transferOKCount);
+            transferCount.get(), transferOKCount.get());
 }
 
 
