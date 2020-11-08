@@ -5,30 +5,28 @@ import java.util.concurrent.ForkJoinPool;
 public class Main {
     private final static String PATH_SOURCE = "https://skillbox.ru";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         long start = System.currentTimeMillis();
         LinksCollector linksCollector = new LinksCollector(PATH_SOURCE, PATH_SOURCE);
-
         SortedSet<String> siteMap = new TreeSet<>(new ForkJoinPool().invoke(linksCollector));
         System.out.println("Время сканирования "
                 + ((System.currentTimeMillis() - start) / 1000) + " сек.");
-        System.out.println(siteMap.size());
-        printSet(siteMap);
-//        printSet(mapSubordinate(mapReadFromFile()));
+        System.out.println("Найдено ссылок:" + siteMap.size());
+        writeFile(siteMap);
     }
 
-//    private static void writeFile(SortedSet<String> map) {
-//        String filePath = "siteMap.txt";
-//
-//        File file = new File(filePath);
-//        try (PrintWriter writer = new PrintWriter(file)) {
-//            for (String s: map) {
-//                writer.write(s + "\n");
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private static void writeFile(SortedSet<String> map) {
+        String filePath = "siteMap.txt";
+
+        File file = new File(filePath);
+        try (PrintWriter writer = new PrintWriter(file)) {
+            for (String s: map) {
+                writer.write(s + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 //    private static SortedSet<String> mapReadFromFile () throws IOException {
 //        String filePath = "siteMap.txt";
 //        SortedSet<String> readMap = new TreeSet<>();
@@ -42,13 +40,7 @@ public class Main {
 //        }
 //        return readMap;
 //    }
-    private static void printSet (Set<String> set)  {
-        int i = 0;
-        for (String s : set) {
-            i++;
-            System.out.println(s);
-        }
-    }
+
 //    private static Set<String> mapSubordinate (SortedSet<String> map){
 //        List<String> mapSub = new ArrayList<>(map);
 //        String preHref = PATH_SOURCE;
