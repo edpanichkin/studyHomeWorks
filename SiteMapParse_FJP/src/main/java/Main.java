@@ -12,7 +12,7 @@ public class Main {
         System.out.println("Время сканирования "
                 + ((System.currentTimeMillis() - start) / 1000) + " сек.");
         System.out.println("Найдено ссылок:" + siteMap.size());
-        writeFile(domainLevelToListChange(siteMap));
+        writeFile(domainLevelToListChange(siteMap));        
     }
 
     private static void writeFile(List<String> map) {
@@ -26,6 +26,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static SortedSet<String> mapReadFromFile () throws IOException {
         String filePath = "siteMap.txt";
         SortedSet<String> readMap = new TreeSet<>();
@@ -39,7 +40,7 @@ public class Main {
         }
         return readMap;
     }
-
+   
     private static List<String> domainLevelToListChange(SortedSet<String> map) {
         List<String> listMap = new ArrayList<>(map);
         for (int i=1; i<listMap.size(); i++){
