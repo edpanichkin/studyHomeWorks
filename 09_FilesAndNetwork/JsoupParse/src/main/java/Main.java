@@ -1,6 +1,5 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -9,30 +8,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    private final static String PATH_TARGET = "src\\data\\images\\";
-    private final static String PATH_SOURCE = "https://lenta.ru";
-
     public static void main(String[] args) throws IOException {
-        imgFileDownload();
+        Document doc = Jsoup.connect("https://lenta.ru").get();
+        Elements elements = doc.select("img");
+        System.out.println("SIZE -1   " + elements.get(elements.size()-3));
+        System.out.println("SIZE -1   " + elements.get(elements.size()-2));
+        System.out.println("SIZE LAST   " + elements.get(elements.size()-1));
+        List<Path> pathFilesToCopy = new ArrayList<>();
+        for (int i = 0; i<elements.size()-3; i++) {
+            String str = elements.get(i).attr("src");
+            URL url = new URL(str);
+            Path target = Paths.get("src\\data\\" + str.substring(str.lastIndexOf("/")+1));
+            Files.copy(url.openStream(),target, StandardCopyOption.REPLACE_EXISTING);
         }
 
-    private static void imgFileDownload () throws IOException {
-        Document doc = Jsoup.connect(PATH_SOURCE).get();
-        Elements elements = doc.select("img.g-picture");
-        if(!Files.exists(Paths.get(PATH_TARGET))){
-            Files.createDirectory(Paths.get(PATH_TARGET));
-        }
-        for (Element element : elements) {
-            String absStr = element.attr("abs:src");
-            String fileName = absStr.substring(absStr.lastIndexOf("/") + 1);
-            URL url = new URL(absStr);
-            Path target = Paths.get(PATH_TARGET + fileName);
-
-            Files.copy(url.openStream(), target, StandardCopyOption.REPLACE_EXISTING);
-            System.out.printf("FILE > %s >> DOWNLOADED\nFROM > %s\n\n", target.getFileName(), absStr);
-        }
     }
 }

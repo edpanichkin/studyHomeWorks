@@ -12,12 +12,11 @@ public class Main {
         System.out.println("Время сканирования "
                 + ((System.currentTimeMillis() - start) / 1000) + " сек.");
         System.out.println("Найдено ссылок:" + siteMap.size());
-        writeFile(siteMap);
+        writeFile(domainLevelToListChange(siteMap));
     }
 
-    private static void writeFile(SortedSet<String> map) {
+    private static void writeFile(List<String> map) {
         String filePath = "siteMap.txt";
-
         File file = new File(filePath);
         try (PrintWriter writer = new PrintWriter(file)) {
             for (String s: map) {
@@ -27,38 +26,36 @@ public class Main {
             e.printStackTrace();
         }
     }
-//    private static SortedSet<String> mapReadFromFile () throws IOException {
-//        String filePath = "siteMap.txt";
-//        SortedSet<String> readMap = new TreeSet<>();
-//        File file = new File(filePath);
-//        FileReader fr = new FileReader(file);
-//        BufferedReader reader = new BufferedReader(fr);
-//        String line = reader.readLine();
-//        while (line !=null) {
-//            readMap.add(line);
-//            line = reader.readLine();
-//        }
-//        return readMap;
-//    }
+    private static SortedSet<String> mapReadFromFile () throws IOException {
+        String filePath = "siteMap.txt";
+        SortedSet<String> readMap = new TreeSet<>();
+        File file = new File(filePath);
+        FileReader fr = new FileReader(file);
+        BufferedReader reader = new BufferedReader(fr);
+        String line = reader.readLine();
+        while (line !=null) {
+            readMap.add(line);
+            line = reader.readLine();
+        }
+        return readMap;
+    }
 
-//    private static Set<String> mapSubordinate (SortedSet<String> map){
-//        List<String> mapSub = new ArrayList<>(map);
-//        String preHref = PATH_SOURCE;
-//        String space = " - ";
-//        for (int i = 1; i < mapSub.size()-1; i++) {
-//            if (mapSub.get(i).contains(preHref)) {
-//                if(mapSub.get(i+1).contains(mapSub.get(i))){
-//                    preHref = mapSub.get(i);
-//                    space = space + " - ";
-//                }
-//                mapSub.set(i, space + mapSub.get(i));
-//                //System.out.println(mapSub.get(i));
-//               // System.out.printf("%s, %s, %s \n", preHref,space,mapSub.get(i));
-//            }else {
-//                preHref = PATH_SOURCE;
-//                space = "   ";
-//            }
-//        }
-//        return new TreeSet<>(mapSub);
-//    }
+    private static List<String> domainLevelToListChange(SortedSet<String> map) {
+        List<String> listMap = new ArrayList<>(map);
+        for (int i=1; i<listMap.size(); i++){
+            char[] c = listMap.get(i).toCharArray();
+            int freq = -3;
+            StringBuilder space = new StringBuilder("\t");
+            for (char value : c) {
+                if (value == '/') {
+                    if (freq > 0) {
+                        space.append(space);
+                    }
+                    freq++;
+                }
+            }
+            listMap.set(i, space + listMap.get(i));
+        }
+    return listMap;
+    }    
 }
