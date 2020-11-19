@@ -1,6 +1,6 @@
 package main;
 
-import response.Task;
+import main.model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ public class Storage {
     public static List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
-    public static int addToDo(Task task) {
+    public static int addTask(Task task) {
         int id = currentId++;
         task.setId(id);
         tasks.put(id, task);
