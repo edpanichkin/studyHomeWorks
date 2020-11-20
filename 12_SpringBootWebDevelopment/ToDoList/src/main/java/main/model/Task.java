@@ -7,17 +7,15 @@ public class Task{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Column(name ="task_name")
-    private String taskName;
-    @Column(name = "is_done")
-    private boolean isDone = false;
+    private String name;
+    private boolean done = false;
 
-    public boolean isDone() {
-        return isDone;
+    public boolean getDone() {
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 
     public int getId() {
@@ -29,7 +27,7 @@ public class Task{
     }
 
     public String getTaskName() {
-        return taskName;
+        return name;
     }
     public Task update (Task task, Task oldTask) {
         if(task.getTaskName() == null) {
@@ -39,7 +37,7 @@ public class Task{
     }
 
     public void setTaskName(String taskName) {
-        this.taskName = taskName;
+        this.name = taskName;
     }
 
 }
