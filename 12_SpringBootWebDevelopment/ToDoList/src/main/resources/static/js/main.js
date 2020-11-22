@@ -7,13 +7,6 @@ $(function(){
             .append('<div>' + taskCode + '</div>');
     };
 
-    //Loading books on load page
-    $.get('/books/', function(response)
-    {
-        for(i in response) {
-            appendTask(response[i]);
-        }
-    });
 
     //Show adding book form
     $('#show-add-task-form').click(function(){
@@ -66,7 +59,7 @@ $(function(){
                 for(i in dataArray) {
                     task[dataArray[i]['name']] = dataArray[i]['value'];
                 }
-                appendBook(task);
+                appendTask(task);
             }
         });
         return false;

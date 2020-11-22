@@ -26,9 +26,9 @@ public class TaskController  {
     }
 
     @PostMapping("/tasks/")
-    public int add(Task task){
+    public ResponseEntity add(Task task){
         Task newTask = taskRepository.save(task);
-        return newTask.getId();
+        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity delete(@PathVariable int id){

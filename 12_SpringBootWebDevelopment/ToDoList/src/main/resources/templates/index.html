@@ -22,11 +22,11 @@
     <h1>Библиотека (<span th:text="${tasksCount}">0</span>)</h1>
     <button id="show-add-task-form">Добавить задачу</button>
     <br><br>
-    <div id="task-list">
+<!--    <div id="task-list">-->
         <div th:each="task : ${tasks}">
-           <!-- <a href="#" class="task-link" th:attr="data-id=${task.id}" th:text="${task.name}"></a> -->
+            <a href="#" class="task-link" th:attr="data-id=${task.id}" th:text="${task.name}"></a>
         </div>
-    </div>
+<!--    </div>-->
 <!--    <p th:text="${someParameter}"></p>-->
 </body>
 </html>

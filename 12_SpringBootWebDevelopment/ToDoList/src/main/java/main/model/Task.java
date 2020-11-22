@@ -8,7 +8,27 @@ public class Task{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    private boolean done = false;
+    private String about;
+    private boolean done;
+    public Task() {
+        this.done = false;
+    }
+
+    public Task(String name, String about){
+        this.name = name;
+        this.about= about;
+        this.done = false;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+
 
     public boolean getDone() {
         return done;
@@ -26,18 +46,24 @@ public class Task{
         this.id = id;
     }
 
-    public String getTaskName() {
+    public String getName() {
         return name;
     }
     public Task update (Task task, Task oldTask) {
-        if(task.getTaskName() == null) {
-            task.setTaskName(oldTask.getTaskName());
+        if(task.getName() == null) {
+            task.setName(oldTask.getName());
+        }
+        if(task.getAbout() == null) {
+            task.setAbout(oldTask.getAbout());
+        }
+        if(oldTask.getDone()) {
+            task.setDone(true);
         }
         return task;
     }
 
-    public void setTaskName(String taskName) {
-        this.name = taskName;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
