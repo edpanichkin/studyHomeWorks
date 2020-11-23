@@ -1,22 +1,15 @@
 package main.controller;
 
-import main.model.Task;
-import main.model.TaskRepository;
+import main.model.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class TaskControllerTest extends AbstractIntegrationTest{
-    public final String rootPath = "http://localhost:8080";
     @Autowired
     TaskRepository taskRepository;
 
@@ -34,33 +27,61 @@ public class TaskControllerTest extends AbstractIntegrationTest{
                 .andExpect(jsonPath("$.about").value("some task"));
     }
     @Test
-    public void givenPerson_whenAdd_thenStatus201andPersonReturned() throws Exception {
-        Task task = new Task("testTask", "for test");
-        System.out.println(mapper.writeValueAsString(task));
-        mockMvc.perform(post(rootPath + "/tasks/")
-                        .content(mapper.writeValueAsString(task))
-                        .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+    public void givenTask_whenAdd_thenStatus201andTaskReturned() throws Exception {
+        mockMvc.perform(post("/tasks/").contentType(MediaType.APPLICATION_JSON)
+                .param("name", "testTask")
+                .param("about", "testAbout"))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("testTask"))
-                .andExpect(jsonPath("$.about").value("for test"))
-                .andExpect(status().isCreated());
+                .andExpect(jsonPath("$.about").value("testAbout"));
     }
-//    @Test
-//    public void add() throws Exception {
-////        mockMvc.perform(MockMvcRequestBuilders.post(rootPath + "/tasks")
-////                .param("taskName", "task_name")
-////                .param("done","true"))
-////                .andExpect(MockMvcResultMatchers.);
-//    }
     @Test
-    public void getNOIdList () throws Exception {
-        //String requestMappingPath = "http://localhost:8080/0";
-        mockMvc.perform(MockMvcRequestBuilders.get(rootPath + "/tasks/0"))
+    public void givenTask_whenDeleteTask_thenStatus200() throws Exception {
+        Task task = createTestTask("testTaskDelete", "for test delete");
+        mockMvc.perform(delete("/tasks/{id}", task.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().json(mapper.writeValueAsString(task)));
+    }
+    @Test
+    public void giveTask_whenUpdate_thenStatus200andUpdatedReturns() throws Exception {
+        long id = createTestTask("beforePutTask","aboutBefore").getId();
+        mockMvc.perform( //test only change NAME
+                put("/tasks/{id}", id)
+                        .param("name", "afterPutTask")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("afterPutTask"))
+                .andExpect(jsonPath("$.about").value("aboutBefore"))
+                .andExpect(jsonPath("$.done").value("false"));
+
+        mockMvc.perform( //test only change ABOUT
+                put("/tasks/{id}", id)
+                        .param("about", "aboutAfter")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("afterPutTask"))
+                .andExpect(jsonPath("$.about").value("aboutAfter"))
+                .andExpect(jsonPath("$.done").value("false"));
+        mockMvc.perform( //test only change DONE
+                put("/tasks/{id}", id)
+                        .param("done", "true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("afterPutTask"))
+                .andExpect(jsonPath("$.about").value("aboutAfter"))
+                .andExpect(jsonPath("$.done").value("true"));
+    }
+    @Test
+    public void giveNonExistentId_GET_shouldReturn404 () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/0"))
                 .andExpect(status().isNotFound());
     }
     @Test
-    public void getIdList () throws Exception {
-        String requestMappingPath = "/tasks/2";
-        mockMvc.perform(MockMvcRequestBuilders.get(requestMappingPath))
-                .andExpect(status().isOk());
+    public void giveNonExistentId_DELETE_shouldReturn404 () throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/tasks/0"))
+                .andExpect(status().isNotFound());
     }
 }

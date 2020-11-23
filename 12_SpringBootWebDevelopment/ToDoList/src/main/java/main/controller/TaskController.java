@@ -32,11 +32,12 @@ public class TaskController  {
     }
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity delete(@PathVariable int id){
-        if(taskRepository.findById(id).isEmpty()) {
+        Optional<Task> task = taskRepository.findById(id);
+        if(task.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         taskRepository.deleteById(id);
-        return new ResponseEntity<>("DELETED" + id, HttpStatus.OK);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
     @PutMapping("/tasks/{id}")
     public ResponseEntity update(@PathVariable int id, Task task){

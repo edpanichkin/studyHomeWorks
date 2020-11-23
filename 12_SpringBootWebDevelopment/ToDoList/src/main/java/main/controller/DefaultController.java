@@ -17,12 +17,14 @@ public class DefaultController
     TaskRepository taskRepository;
 
     @RequestMapping("/date")
-    public String date(){
-        return (new Date()).toString();
+    public String date(Model model){
+        model.addAttribute("date", (new Date()).toString());
+        return "date";
     }
     @RequestMapping("/random")
-    public String random(){
-        return String.valueOf(Math.random());
+    public String random(Model model) {
+        model.addAttribute("random", Math.random());
+        return "random";
     }
     @RequestMapping("/")
     public String index(Model model){
