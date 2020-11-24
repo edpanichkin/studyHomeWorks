@@ -19,20 +19,20 @@ public class TaskControllerTest extends AbstractIntegrationTest{
     }
     @Test
     public void givenId_whenGetExistingTask_thenStatus200andTaskReturned() throws Exception {
-        int id = createTestTask("TestTask", "some task").getId();
+        int id = createTestTask("createTestTask", "some task").getId();
         mockMvc.perform(get("/tasks/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value("TestTask"))
+                .andExpect(jsonPath("$.name").value("createTestTask"))
                 .andExpect(jsonPath("$.about").value("some task"));
     }
     @Test
     public void givenTask_whenAdd_thenStatus201andTaskReturned() throws Exception {
         mockMvc.perform(post("/tasks/").contentType(MediaType.APPLICATION_JSON)
-                .param("name", "testTask")
+                .param("name", "PostNewTestTask")
                 .param("about", "testAbout"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("testTask"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("PostNewTestTask"))
                 .andExpect(jsonPath("$.about").value("testAbout"));
     }
     @Test

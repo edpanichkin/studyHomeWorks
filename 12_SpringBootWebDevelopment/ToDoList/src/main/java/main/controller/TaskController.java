@@ -1,12 +1,9 @@
 package main.controller;
 
-import main.Storage;
+import main.controller.exception.EntityNotFoundException;
 import main.model.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import main.model.Task;
 
 import java.util.ArrayList;
@@ -26,36 +23,34 @@ public class TaskController  {
     }
 
     @PostMapping("/tasks/")
-    public ResponseEntity add(Task task){
-        Task newTask = taskRepository.save(task);
-        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
+    public Task addTask(Task task) {
+        return taskRepository.save(task);
     }
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity delete(@PathVariable int id){
+    public Task deleteTask(@PathVariable int id) throws EntityNotFoundException{
         Optional<Task> task = taskRepository.findById(id);
         if(task.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new EntityNotFoundException();
         }
         taskRepository.deleteById(id);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return task.get();
     }
     @PutMapping("/tasks/{id}")
-    public ResponseEntity update(@PathVariable int id, Task task){
-
-        if(taskRepository.findById(id).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Task updateTask (@PathVariable int id, Task task) throws EntityNotFoundException{
+        Optional<Task> optionalTask = taskRepository.findById(id);
+        if(optionalTask.isEmpty()) {
+            throw new EntityNotFoundException();
         }
-        Task oldTask = taskRepository.findById(id).get();
-        taskRepository.save(task.update(task, oldTask));
-        return new ResponseEntity<>(taskRepository.findById(id),HttpStatus.OK);
+        taskRepository.save(task.update(task, optionalTask.get()));
+        return optionalTask.get();
     }
     @GetMapping("/tasks/{id}")
-    public ResponseEntity get(@PathVariable int id){
+    public Task getTask (@PathVariable int id) throws EntityNotFoundException {
         Optional<Task> optionalTask = taskRepository.findById(id);
-        if(!optionalTask.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(optionalTask.isEmpty()) {
+            throw new EntityNotFoundException();
         }
-        return new ResponseEntity<>(optionalTask.get(), HttpStatus.OK);
+        return optionalTask.get();
     }
 
 }
