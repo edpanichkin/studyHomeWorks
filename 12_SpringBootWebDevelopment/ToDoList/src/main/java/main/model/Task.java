@@ -1,8 +1,11 @@
 package main.model;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 
 @Entity
+@Component
 public class Task{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

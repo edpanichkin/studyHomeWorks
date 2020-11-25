@@ -1,5 +1,6 @@
 package main.controller;
 
+import main.dao.TaskRepository;
 import main.model.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
