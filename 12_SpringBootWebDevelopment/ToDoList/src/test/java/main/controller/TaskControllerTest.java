@@ -1,6 +1,7 @@
 package main.controller;
 
 import main.dao.TaskRepository;
+import main.dao.TaskService;
 import main.model.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TaskControllerTest extends AbstractIntegrationTest{
     @Autowired
-    TaskRepository taskRepository;
+    TaskService taskService;
 
     private Task createTestTask(String name, String about) {
-        Task task = new Task(name, about);
-        return taskRepository.save(task);
+        return taskService.addTask(new Task(name, about));
     }
+
     @Test
     public void givenId_whenGetExistingTask_thenStatus200andTaskReturned() throws Exception {
         int id = createTestTask("createTestTask", "some task").getId();

@@ -1,11 +1,7 @@
 package main.model;
-
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 
 @Entity
-@Component
 public class Task{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,8 +26,6 @@ public class Task{
     public void setAbout(String about) {
         this.about = about;
     }
-
-
 
     public boolean getDone() {
         return done;

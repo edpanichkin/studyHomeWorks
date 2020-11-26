@@ -2,12 +2,12 @@ package main.dao;
 
 import main.controller.exception.EntityNotFoundException;
 import main.model.Task;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-@Component
+@Service
 public class TaskService {
     final TaskRepository taskRepository;
 
