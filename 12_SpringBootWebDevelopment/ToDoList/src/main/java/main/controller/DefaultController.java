@@ -1,12 +1,11 @@
 package main.controller;
 
 import main.dao.TaskService;
-import main.model.Task;
+import main.model.TaskModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class DefaultController
     }
     @RequestMapping("/")
     public String index(Model model){
-        List<Task> tasks = taskService.taskList();
+        List<TaskModel> tasks = taskService.taskList();
         model.addAttribute("tasks", tasks);
         model.addAttribute("tasksCount", tasks.size());
         return "index";

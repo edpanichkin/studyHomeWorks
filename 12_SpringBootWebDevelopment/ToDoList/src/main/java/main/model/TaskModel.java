@@ -2,18 +2,18 @@ package main.model;
 import javax.persistence.*;
 
 @Entity
-public class Task{
+public class TaskModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String about;
     private boolean done;
-    public Task() {
+    public TaskModel() {
         this.done = false;
     }
 
-    public Task(String name, String about){
+    public TaskModel(String name, String about){
         this.name = name;
         this.about= about;
         this.done = false;
@@ -46,7 +46,7 @@ public class Task{
     public String getName() {
         return name;
     }
-    public Task update (Task task, Task oldTask) {
+    public TaskModel update (TaskModel task, TaskModel oldTask) {
         if(task.getName() == null) {
             task.setName(oldTask.getName());
         }

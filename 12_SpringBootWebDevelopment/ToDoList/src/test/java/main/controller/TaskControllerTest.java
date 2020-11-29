@@ -1,6 +1,5 @@
 package main.controller;
 
-import main.dao.TaskRepository;
 import main.dao.TaskService;
 import main.model.*;
 import org.junit.Test;
@@ -15,8 +14,8 @@ public class TaskControllerTest extends AbstractIntegrationTest{
     @Autowired
     TaskService taskService;
 
-    private Task createTestTask(String name, String about) {
-        return taskService.addTask(new Task(name, about));
+    private TaskModel createTestTask(String name, String about) {
+        return taskService.addTask(new TaskModel(name, about));
     }
 
     @Test
@@ -39,7 +38,7 @@ public class TaskControllerTest extends AbstractIntegrationTest{
     }
     @Test
     public void givenTask_whenDeleteTask_thenStatus200() throws Exception {
-        Task task = createTestTask("testTaskDelete", "for test delete");
+        TaskModel task = createTestTask("testTaskDelete", "for test delete");
         mockMvc.perform(delete("/tasks/{id}", task.getId()))
             .andExpect(status().isOk())
             .andExpect(content().json(mapper.writeValueAsString(task)));
