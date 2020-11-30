@@ -6,6 +6,7 @@ import main.model.TaskMapper;
 import org.springframework.web.bind.annotation.*;
 import main.model.TaskModel;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,16 +24,16 @@ public class TaskController  {
     }
 
     @PostMapping("/tasks/")
-    public TaskModel addTask(TaskModel task) {
-        return taskService.addTask(task);
+    public TaskModel addTask(@Valid TaskModel task) {
+        return TaskMapper.map(taskService.addTask(task));
     }
     @DeleteMapping("/tasks/{id}")
     public TaskModel deleteTask(@PathVariable int id) throws EntityNotFoundException{
-        return taskService.deleteTask(id);
+        return TaskMapper.map(taskService.deleteTask(id));
     }
     @PutMapping("/tasks/{id}")
     public TaskModel updateTask (@PathVariable int id, TaskModel task) throws EntityNotFoundException{
-        return taskService.updateTask(id, task);
+        return TaskMapper.map(taskService.updateTask(id, task));
     }
     @GetMapping("/tasks/{id}")
     public TaskModel getTask (@PathVariable int id) throws EntityNotFoundException {

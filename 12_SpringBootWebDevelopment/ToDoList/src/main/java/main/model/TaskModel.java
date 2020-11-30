@@ -1,14 +1,19 @@
 package main.model;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class TaskModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @NotNull(message = "Task name is necessary")
     private String name;
+    @NotNull(message = "About is necessary")
     private String about;
     private boolean done;
+
     public TaskModel() {
         this.done = false;
     }
