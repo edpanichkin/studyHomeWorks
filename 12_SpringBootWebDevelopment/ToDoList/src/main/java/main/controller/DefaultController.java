@@ -2,6 +2,7 @@ package main.controller;
 
 import main.dao.TaskService;
 import main.model.TaskModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +13,13 @@ import java.util.List;
 @Controller
 public class DefaultController
 {
-   final TaskService taskService;
+    final TaskService taskService;
 
     public DefaultController(TaskService taskService) {
         this.taskService = taskService;
     }
-
+    @Value("${someParameter}")
+    private int someParameter;
     @RequestMapping("/date")
     public String date(Model model){
         model.addAttribute("date", (new Date()).toString());
@@ -33,6 +35,7 @@ public class DefaultController
         List<TaskModel> tasks = taskService.taskList();
         model.addAttribute("tasks", tasks);
         model.addAttribute("tasksCount", tasks.size());
+        model.addAttribute("someParameter", someParameter);
         return "index";
     }
 
