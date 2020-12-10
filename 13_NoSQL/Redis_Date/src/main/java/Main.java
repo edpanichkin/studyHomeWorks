@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         RedisStorage redis = new RedisStorage();
-        redis.init();
+        redis.init("redis://127.0.0.1:6379");
         int i = 1;
         ArrayList<String> usersUpdated = new ArrayList<>(fillArray());
         for (;;) {

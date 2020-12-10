@@ -19,7 +19,7 @@ public class RedisStorage {
     private RScoredSortedSet<String> onlineUsers;
 
     private final static String KEY = "ONLINE_USERS";
-    private static final int SLEEP = 1000;
+    private static final int SLEEP = 100;
 
     private double getTs() {
         return new Date().getTime() / 1000;
@@ -29,10 +29,12 @@ public class RedisStorage {
         out.println("— На главной странице показываем пользователя -- "
                 + onlineUsers.last());
         }
-
-    void init() {
+    public String last() {
+        return onlineUsers.last();
+    }
+    void init(String address) {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://127.0.0.1:6379");
+        config.useSingleServer().setAddress(address);
         try {
             redisson = Redisson.create(config);
         } catch (RedisConnectionException Exc) {
@@ -47,9 +49,9 @@ public class RedisStorage {
     }
 
     // Поднимает в выдаче после платежа
-    void userPaidUp(String user_id) throws InterruptedException {
-        onlineUsers.add(getTs(), user_id);
-        out.println("> Пользователь " + user_id + " оплатил платную услугу ");
+    void userPaidUp(String userId) throws InterruptedException {
+        onlineUsers.add(getTs(), userId);
+        out.println("> Пользователь " + userId + " оплатил платную услугу ");
         Thread.sleep(SLEEP);
         print();
     }
