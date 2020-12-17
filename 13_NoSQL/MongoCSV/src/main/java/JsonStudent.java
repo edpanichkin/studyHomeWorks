@@ -1,11 +1,6 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
-// import com.fasterxml.jackson.databind.ObjectMapper; // version 2.11.1
-// import com.fasterxml.jackson.annotation.JsonProperty; // version 2.11.1
-/* ObjectMapper om = new ObjectMapper();
-Root root = om.readValue(myJsonString), Root.class); */
 class Id{
     @JsonProperty("$oid")
     public String oid;
@@ -13,6 +8,13 @@ class Id{
 
 public class JsonStudent {
     public Id _id;
+
+    @JsonProperty("Name")
+    public String name;
+    @JsonProperty("Age")
+    public int age;
+    @JsonProperty("CourseList")
+    public List<String> courseList;
 
     public Id get_id() {
         return _id;
@@ -30,11 +32,11 @@ public class JsonStudent {
         this.name = name;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -46,10 +48,5 @@ public class JsonStudent {
         this.courseList = courseList;
     }
 
-    @JsonProperty("Name")
-    public String name;
-    @JsonProperty("Age")
-    public String age;
-    @JsonProperty("CourseList")
-    public List<String> courseList;
+
 }
