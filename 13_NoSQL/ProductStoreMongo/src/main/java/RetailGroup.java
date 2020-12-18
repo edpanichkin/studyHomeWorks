@@ -15,18 +15,36 @@ public class RetailGroup {
     public void putProductOnShelf(Product product, Store store) {
         store.addProduct(product);
     }
+    public Store findStore (String storeName) {
+        for (Store s : storeList) {
+            if (s.getName().equals(storeName)) {
+                return s;
+            }
+        }
+        return null;
+    }
 
-    public long newStoreOpenDateOf() {
+    public Product findProduct (String productName) {
+        for (Product p : productList) {
+            if (p.getName().equals(productName)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private long newStoreOpenDateOf() {
         return new Date().getTime() / 1000;
     }
 
-    public void stats(Store store) {
-        System.out.println(store.avgPriceProduct());
+    public void stats() {
+        storeList.forEach(s -> System.out.printf("Store %s, avg: %s \n", s.getName(), s.avgPriceProduct()));
     }
 
     public void printStores() {
-        for (Store s: storeList) {
-            System.out.println(s.getName());
-        }
+        storeList.forEach(s -> {
+            System.out.println("-s " + s.getName());
+            s.getProductList().forEach(p -> System.out.println("--p " + p.getName()));
+        });
     }
 }

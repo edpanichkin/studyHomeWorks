@@ -1,7 +1,11 @@
-import java.util.List;
-import java.util.OptionalDouble;
+import java.util.*;
 
 public class Store {
+
+    private String name;
+    private long dateOpen;
+    private final List<Product> productList = new ArrayList<>();
+
     public Store(String name, long dateOpen) {
         this.name = name;
         this.dateOpen = dateOpen;
@@ -23,10 +27,6 @@ public class Store {
         this.dateOpen = dateOpen;
     }
 
-    private String name;
-    private long dateOpen;
-    private List<Product> productList;
-
     public List<Product> getProductList() {
         return productList;
     }
@@ -39,11 +39,13 @@ public class Store {
         return productList.size();
     }
 
-    public OptionalDouble avgPriceProduct() {
-        return productList.stream().mapToLong(Product::getPrice).average();
+    public Double avgPriceProduct() {
+        OptionalDouble od = productList.stream().mapToLong(Product::getPrice).average();
+        return od.isPresent() ? od.getAsDouble() : null;
     }
 
 //    public Product minPriceProduct() {
+//        Collections.sort(productList);
 //        return productList.stream().mapToLong(Product::getPrice).min();
 //    }
 
