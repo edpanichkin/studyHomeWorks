@@ -19,8 +19,8 @@ public class MongoStorage {
     private MongoCollection<Document> collection;
     private final String csvFile = "src\\main\\resources\\mongo.csv";
 
-    public void init() {
-        MongoClient mongoClient = new MongoClient( "127.0.0.1" , 27017 );
+    public void init(String host, int port) {
+        MongoClient mongoClient = new MongoClient(host, port);
         MongoDatabase database = mongoClient.getDatabase("local");
         collection = database.getCollection("TestSkillDemo");
         collection.drop();

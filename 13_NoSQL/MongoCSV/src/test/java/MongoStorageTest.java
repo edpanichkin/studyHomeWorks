@@ -13,13 +13,13 @@ import java.util.List;
 public class MongoStorageTest {
     MongoStorage mongoTest = new MongoStorage();
 
-//    @Rule
-//    public GenericContainer mongoDBContainer = new GenericContainer(DockerImageName.parse("mongo:4.0.10"))
-//            .withExposedPorts(27017);
+    @Rule
+    public GenericContainer mongoDBContainer = new GenericContainer(DockerImageName.parse("mongo:4.0.10"))
+            .withExposedPorts(27017);
 
     @Before
     public void setUp() {
-        mongoTest.init();
+        mongoTest.init(mongoDBContainer.getHost(),mongoDBContainer.getMappedPort(27017));
     }
 
     @Test
