@@ -4,22 +4,27 @@ public class Main {
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
         RetailGroup retailGroup = new RetailGroup();
-        retailGroup.createNewStore("testInMain_1");
-        retailGroup.createNewStore("testInMain_2");
-        retailGroup.addNewProduct("moloko", 10);
-        retailGroup.addNewProduct("cheese", 2);
+        retailGroup.init("127.0.0.1", 27017);
+        retailGroup.createNewStore("store1");
+        retailGroup.createNewStore("store2");
+        retailGroup.createNewStore("store3");
+        retailGroup.addNewProduct("moloko", 100);
+        retailGroup.addNewProduct("cheese", 200);
         retailGroup.addNewProduct("ham", 3);
-        retailGroup.findProduct("ham");
-        retailGroup.putProductOnShelf(retailGroup.findProduct("ham"),
-                retailGroup.findStore("testInMain_1"));
-        retailGroup.putProductOnShelf(retailGroup.findProduct("moloko"),
-                retailGroup.findStore("testInMain_1"));
-        retailGroup.putProductOnShelf(retailGroup.findProduct("cheese"),
-                retailGroup.findStore("testInMain_2"));
+        retailGroup.printMongoProducts();
+        retailGroup.addNewProduct("ham2", 4);
+        retailGroup.printMongoProducts();
+        retailGroup.addNewProduct("ham2", 4);
+        retailGroup.printMongoProducts();
 
-        retailGroup.printStores();
+        retailGroup.putProductOnShelf("ham","store1");
+        retailGroup.putProductOnShelf("ham2","store3");
+        retailGroup.putProductOnShelf("ham","store2");
+        retailGroup.putProductOnShelf("moloko","store1");
+        retailGroup.putProductOnShelf("cheese", "store2");
+        retailGroup.putProductOnShelf("ham",   "store3");
 
-        retailGroup.stats();
+        retailGroup.getStats();
 //        for(;;) {
 //            System.out.println("Listen for commands:\n" +
 //                    "NEWSTORE storeName // " +
