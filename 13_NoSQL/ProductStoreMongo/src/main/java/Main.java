@@ -22,9 +22,9 @@ public class Main {
         retailGroup.putProductOnShelf("ham","store2");
         retailGroup.putProductOnShelf("moloko","store1");
         retailGroup.putProductOnShelf("cheese", "store2");
-        retailGroup.putProductOnShelf("ham",   "store3");
 
-        retailGroup.getStats();
+
+        retailGroup.printStats(retailGroup.getStats());
 //        for(;;) {
 //            System.out.println("Listen for commands:\n" +
 //                    "NEWSTORE storeName // " +

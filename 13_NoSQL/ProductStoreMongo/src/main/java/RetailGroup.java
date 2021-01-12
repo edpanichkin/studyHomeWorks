@@ -1,3 +1,4 @@
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.model.*;
 import org.bson.Document;
@@ -7,6 +8,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Accumulators.*;
 
@@ -47,11 +49,11 @@ public class RetailGroup {
         return products.find(eq("name", name)).first();
     }
 
-    public String countCheapProducts(String store) {
+    public int countCheapProducts(String store) {
         Document countLtPr = stores.aggregate(Arrays.asList(
                 unwind("$products"),
                 match(and(eq("name", store), lt("products.price", 100))), count())).first();
-        return countLtPr != null ? countLtPr.get("count").toString() : "0";
+        return countLtPr != null ? (int) countLtPr.get("count") : 0;
 
     }
 
@@ -63,7 +65,8 @@ public class RetailGroup {
                 Accumulators.min("min", "$products.price"),
                 sum("count", 1)),
                 sort(Sorts.ascending("_id")))).into(new ArrayList<>());
-        printStats(list);
+        list.forEach(d -> d.append("cheap", countCheapProducts((String) d.get("_id"))));
+        //System.out.println(list);
         return list;
     }
 
@@ -76,17 +79,9 @@ public class RetailGroup {
             "\nМинимальная стоимость товара: " + d.get("min") +
             "\nМаксимальная стоимость товара: " + d.get("max") +
             "\nСредняя стоимость товара:  " + d.get("avg") +
-            "\nКол-во товаров, стоимостью ниже 100р: " + countCheapProducts(store) +
+            "\nКол-во товаров, стоимостью ниже 100р: " + d.get("cheap") +
             "\n___________________________________________");
         });
-
-//        AggregateIterable <Document> documentAggregateIterable =
-//                products.aggregate(Arrays.asList(
-//                Aggregates.lookup("stores", "name", "products.name", "shops"),
-//                Aggregates.unwind("$shops"),
-//                Aggregates.group("$shops.name", Accumulators.avg("avg", "$price"))));
-//        for(Document doc:documentAggregateIterable){
-//            System.out.println(doc.get("_id") + " / " + doc.get("avg"));
     }
 
     public void printMongoStores() {
