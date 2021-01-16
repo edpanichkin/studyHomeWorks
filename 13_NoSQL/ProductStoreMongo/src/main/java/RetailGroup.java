@@ -30,16 +30,31 @@ public class RetailGroup {
     }
 
     public void createNewStore(String store) {
-        stores.insertOne(new Document().append("name", store).append("products", new ArrayList<>()));
+        if (getStore(store) != null) {
+            System.out.println("Магазин " + store + " уже был открыт ранее");
+        } else {
+            stores.insertOne(new Document().append("name", store).append("products", new ArrayList<>()));
+            System.out.println("Магазин " + store + " открыт!");
+        }
     }
 
     public void addNewProduct(String product, double price) {
-        products.insertOne(new Document().append("name", product).append("price", price));
+        if (getProduct(product) != null) {
+            System.out.println("Продукт " + product + " уже был добавлен ранее");
+        } else {
+            products.insertOne(new Document().append("name", product).append("price", price));
+            System.out.println("Продукт " + product + " добавлен по цене: " + price);
+        }
     }
 
     public void putProductOnShelf(String product, String store) {
-        stores.updateOne(eq("name", store),
-                Updates.addToSet("products", getProduct(product)));
+        if(stores.find(and(ne("products", getProduct(product)), eq("name", store))).first() != null) {
+            stores.updateOne(eq("name", store),
+                    Updates.addToSet("products", getProduct(product)));
+        }
+        else {
+            System.out.println("Товар " + product + " уже выставлен на полки в магазине " + store);
+        }
     }
 
     public Document getStore(String name) {

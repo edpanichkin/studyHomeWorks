@@ -8,6 +8,7 @@ public class Main {
         retailGroup.createNewStore("store1");
         retailGroup.createNewStore("store2");
         retailGroup.createNewStore("store3");
+        retailGroup.createNewStore("store3");
         retailGroup.addNewProduct("moloko", 100);
         retailGroup.addNewProduct("cheese", 200);
         retailGroup.addNewProduct("ham", 3);
@@ -22,7 +23,7 @@ public class Main {
         retailGroup.putProductOnShelf("ham","store2");
         retailGroup.putProductOnShelf("moloko","store1");
         retailGroup.putProductOnShelf("cheese", "store2");
-
+        retailGroup.putProductOnShelf("cheese", "store2");
 
         retailGroup.printStats(retailGroup.getStats());
 //        for(;;) {
