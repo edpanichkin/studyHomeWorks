@@ -23,6 +23,9 @@ public class RetailGroupTest {
         retailTest.createNewStore("s2");
         retailTest.createNewStore("s3");
         retailTest.createNewStore("s4");
+        retailTest.createNewStore("s5");
+        retailTest.createNewStore("s6");
+
 
         for (int i = 0; i < 50; i++) {
             retailTest.addNewProduct("pr" + i, i);
@@ -71,5 +74,7 @@ public class RetailGroupTest {
         assertEquals(store2.get("cheap"), 2);
         assertEquals(store3.get("cheap"), 0);
         assertEquals(store4.get("cheap"), 2);
+
+        retailTest.printStats();
     }
 }

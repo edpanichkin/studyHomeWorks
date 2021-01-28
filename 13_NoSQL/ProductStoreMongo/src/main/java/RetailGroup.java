@@ -1,4 +1,3 @@
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.model.*;
 import org.bson.Document;
@@ -8,7 +7,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.bson.conversions.Bson;
+import org.bson.io.BsonOutput;
 
 import static com.mongodb.client.model.Accumulators.*;
 
@@ -34,7 +33,7 @@ public class RetailGroup {
             System.out.println("Магазин " + store + " уже был открыт ранее");
         } else {
             stores.insertOne(new Document().append("name", store).append("products", new ArrayList<>()));
-            System.out.println("Магазин " + store + " открыт!");
+            System.out.println("Магазин " + store + " открыт!" + "\n");
         }
     }
 
@@ -43,7 +42,7 @@ public class RetailGroup {
             System.out.println("Продукт " + product + " уже был добавлен ранее");
         } else {
             products.insertOne(new Document().append("name", product).append("price", price));
-            System.out.println("Продукт " + product + " добавлен по цене: " + price);
+            System.out.println("Продукт " + product + " добавлен по цене: " + price + "\n");
         }
     }
 
@@ -69,33 +68,37 @@ public class RetailGroup {
                 unwind("$products"),
                 match(and(eq("name", store), lt("products.price", 100))), count())).first();
         return countLtPr != null ? (int) countLtPr.get("count") : 0;
-
     }
 
     public List<Document> getStats() {
         List<Document> list = stores.aggregate(Arrays.asList(
                 unwind("$products"),
                 group("$name", avg("avg", "$products.price"),
-                Accumulators.max("max", "$products.price"),
-                Accumulators.min("min", "$products.price"),
-                sum("count", 1)),
+                        Accumulators.max("max", "$products.price"),
+                        Accumulators.min("min", "$products.price"),
+                        sum("count", 1)),
                 sort(Sorts.ascending("_id")))).into(new ArrayList<>());
         list.forEach(d -> d.append("cheap", countCheapProducts((String) d.get("_id"))));
-        //System.out.println(list);
         return list;
     }
+    public List<Document> getEmptyStoreList() {
+        return stores.aggregate(Arrays.asList(match(size("products", 0)))).into(new ArrayList<>());
+    }
 
-    public void printStats(List<Document> list) {
-        list.forEach(d -> {
-            String store = (String) d.get("_id");
+    public void printStats() {
+        getStats().forEach(d -> {
+            System.out.println("Информация по магазину: " + d.get("_id") +
+                    "\nКол-во товаров на полках: " + d.get("count") +
+                    "\nМинимальная стоимость товара: " + d.get("min") +
+                    "\nМаксимальная стоимость товара: " + d.get("max") +
+                    "\nСредняя стоимость товара:  " + d.get("avg") +
+                    "\nКол-во товаров, стоимостью ниже 100р: " + d.get("cheap") +
+                    "\n___________________________________________");
+        });
 
-            System.out.println("Информация по магазину: " + store +
-            "\nКол-во товаров на полках: " + d.get("count") +
-            "\nМинимальная стоимость товара: " + d.get("min") +
-            "\nМаксимальная стоимость товара: " + d.get("max") +
-            "\nСредняя стоимость товара:  " + d.get("avg") +
-            "\nКол-во товаров, стоимостью ниже 100р: " + d.get("cheap") +
-            "\n___________________________________________");
+        getEmptyStoreList().forEach(d -> {
+            System.out.println("В магазине: " + d.get("name") + " еще нет товаров" +
+                    "\n___________________________________________");
         });
     }
 
