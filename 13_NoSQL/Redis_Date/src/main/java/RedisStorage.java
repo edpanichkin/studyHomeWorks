@@ -55,8 +55,8 @@ public class RedisStorage {
         Thread.sleep(SLEEP);
         print();
     }
-    void userOnline (String user_id) throws InterruptedException {
-        onlineUsers.add(getTs(), user_id);
+    void userOnline (String userId) throws InterruptedException {
+        onlineUsers.add(getTs(), userId);
         Thread.sleep(SLEEP);
         print();
     }
