@@ -70,10 +70,14 @@ public class RetailGroupTest {
         assertEquals(store3.get("avg"), 250.0);
         assertEquals(store4.get("avg"), 3.0);
 
-        assertEquals(store1.get("cheap"), 50);
-        assertEquals(store2.get("cheap"), 2);
-        assertEquals(store3.get("cheap"), 0);
-        assertEquals(store4.get("cheap"), 2);
+//        assertEquals(store1.get("cheap"), 50);
+//        assertEquals(store2.get("cheap"), 2);
+//        assertEquals(store3.get("cheap"), 0);
+//        assertEquals(store4.get("cheap"), 2);
+        assertEquals(store1.get("cheapField"), 50L);
+        assertEquals(store2.get("cheapField"), 2L);
+        assertEquals(store3.get("cheapField"), 0L);
+        assertEquals(store4.get("cheapField"), 2L);
 
         retailTest.printStats();
     }

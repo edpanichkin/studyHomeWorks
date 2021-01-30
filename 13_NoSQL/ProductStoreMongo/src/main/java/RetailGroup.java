@@ -7,6 +7,7 @@ import static com.mongodb.client.model.Filters.*;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.conversions.Bson;
 import org.bson.io.BsonOutput;
 
 import static com.mongodb.client.model.Accumulators.*;
@@ -42,7 +43,7 @@ public class RetailGroup {
             System.out.println("Продукт " + product + " уже был добавлен ранее");
         } else {
             products.insertOne(new Document().append("name", product).append("price", price));
-            System.out.println("Продукт " + product + " добавлен по цене: " + price + "\n");
+            //System.out.println("Продукт " + product + " добавлен по цене: " + price + "\n");
         }
     }
 
@@ -71,15 +72,24 @@ public class RetailGroup {
     }
 
     public List<Document> getStats() {
+        Bson cheapLt100Field = Aggregates.addFields(new Field("cheapLt100",
+                new Document("$cond",
+                        new Document("if", new Document("$gte", Arrays.asList("$products.price", 100L)))
+                                .append("then", 0L)
+                                .append("else", 1L))));
+
         List<Document> list = stores.aggregate(Arrays.asList(
-                unwind("$products"),
+                unwind("$products"), cheapLt100Field,
                 group("$name", avg("avg", "$products.price"),
                         Accumulators.max("max", "$products.price"),
                         Accumulators.min("min", "$products.price"),
-                        sum("count", 1)),
+                        sum("count", 1),
+                Accumulators.sum("cheapField", "$cheapLt100")),
                 sort(Sorts.ascending("_id")))).into(new ArrayList<>());
-        list.forEach(d -> d.append("cheap", countCheapProducts((String) d.get("_id"))));
+        //list.forEach(d -> d.append("cheap", countCheapProducts((String) d.get("_id"))));
+       //System.out.println("LIST" + list);
         return list;
+
     }
     public List<Document> getEmptyStoreList() {
         return stores.aggregate(Arrays.asList(match(size("products", 0)))).into(new ArrayList<>());
@@ -92,7 +102,9 @@ public class RetailGroup {
                     "\nМинимальная стоимость товара: " + d.get("min") +
                     "\nМаксимальная стоимость товара: " + d.get("max") +
                     "\nСредняя стоимость товара:  " + d.get("avg") +
-                    "\nКол-во товаров, стоимостью ниже 100р: " + d.get("cheap") +
+                   // "\nКол-во товаров, стоимостью ниже 100р: " + d.get("cheap") +
+                    "\nКол-во товаров, стоимостью ниже 100р (aggregation Field ): " + d.get("cheapField") +
+
                     "\n___________________________________________");
         });
 
