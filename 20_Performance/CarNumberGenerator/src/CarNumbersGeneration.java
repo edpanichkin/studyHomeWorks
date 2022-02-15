@@ -21,7 +21,13 @@ public class CarNumbersGeneration implements Runnable {
         for (char firstLetter : letters) {
           for (char secondLetter : letters) {
             for (char thirdLetter : letters) {
-              stringBuilder.append(firstLetter).append(strNum).append(secondLetter).append(thirdLetter).append(strReg).append('\n');
+              stringBuilder
+                      .append(firstLetter)
+                      .append(strNum)
+                      .append(secondLetter)
+                      .append(thirdLetter)
+                      .append(strReg)
+                      .append('\n');
             }
           }
         }
@@ -35,7 +41,9 @@ public class CarNumbersGeneration implements Runnable {
   private static String padNumber(int number, int numberLength) {
     StringBuilder numberStr = new StringBuilder();
     int padSize = numberLength - String.valueOf(number).length();
-    return numberStr.append("0".repeat(Math.max(0, padSize))).append(number).toString();
+    return numberStr
+            .append("0".repeat(Math.max(0, padSize)))
+            .append(number).toString();
   }
 
   @Override
