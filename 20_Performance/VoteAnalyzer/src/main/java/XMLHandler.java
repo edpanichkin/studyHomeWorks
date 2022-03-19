@@ -51,8 +51,6 @@ public class XMLHandler extends DefaultHandler {
   }
 
   public void printDuplicatedVotersInMap() {
-
-
     for (Voter voter : voterCounts.keySet()) {
       int count = voterCounts.get(voter);
       if (count > 1) {
@@ -64,7 +62,6 @@ public class XMLHandler extends DefaultHandler {
   @Override
   public void endDocument() throws SAXException {
     System.out.println("END PARSING: " + (System.currentTimeMillis() - start));
-
     super.endDocument();
   }
 }

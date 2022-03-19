@@ -1,4 +1,3 @@
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -31,8 +30,7 @@ public class Voter
 
     public String toString()
     {
-        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy.MM.dd");
-        return name + " (" + dayFormat.format(birthDay) + ")";
+        return name + " (" + birthDay + ")";
     }
 
     public String getName()

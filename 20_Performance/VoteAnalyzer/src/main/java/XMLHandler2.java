@@ -33,7 +33,14 @@ public class XMLHandler2 extends DefaultHandler {
     }
   }
 
-  public void printDuplicatedVotersInMap() {
+  @Override
+  public void endDocument() throws SAXException {
+    System.out.println("END PARSING: " + (System.currentTimeMillis() - start));
+    duplicateSearchToMap();
+    super.endDocument();
+  }
+
+  private void duplicateSearchToMap() {
     voterList.sort(new Comparator<String>() {
       @Override
       public int compare(String o1, String o2) {
@@ -46,19 +53,18 @@ public class XMLHandler2 extends DefaultHandler {
       if (voterList.get(i + 1).equals(strVoter)) {
         String[] str = strVoter.split(",");
         int count = 0;
-
         try {
           voter = new Voter(str[0], birthDayFormat.parse(str[1]));
           count = voterCounts.getOrDefault(voter, 1);
-
           voterCounts.put(voter, count + 1);
-
         } catch (ParseException e) {
           e.printStackTrace();
         }
       }
     }
+  }
 
+  public void printDuplicatedVotersInMap() {
     for (Voter voter : voterCounts.keySet()) {
       int count = voterCounts.get(voter);
       if (count > 1) {
@@ -67,9 +73,4 @@ public class XMLHandler2 extends DefaultHandler {
     }
   }
 
-  @Override
-  public void endDocument() throws SAXException {
-    System.out.println("END PARSING: " + (System.currentTimeMillis() - start));
-    super.endDocument();
-  }
 }
